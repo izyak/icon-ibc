@@ -72,3 +72,15 @@ rly keys show archway relayWallet
 Load balance to this wallet as well in the same way as above based on testnet or local docker container.
 
 This wallet will be saved to `.relayer/keys/${chain_id}/keyring-test/`. Hence, this keyPath on relay config on `cfg.sh`.
+
+### One time Effort Way
+It's a bit of a hacky way, but the easiest way to load balance however would be:
+- On the archway repo, open `contrib/localnet/localnet.sh` file.
+- Add te following lines:
+    ```sh
+    archwayd add-genesis-account $RELAY_WALLET_ADDR 100000000000000stake
+    archwayd add-genesis-account $GOD_WALLET_ADDR 100000000000000stake
+    ```
+- Then, restart the archway docker container.
+- You should always have enough balance for relayWllet and godWallet provided you follow this step.
+
