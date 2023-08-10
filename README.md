@@ -73,7 +73,11 @@ make install
 
 
 ## Usage
-Update `const.sh` as per your requirement. Ideally, you should be okay with changing the fields under `CHANGE` header. Change the location of IBC-Integrations, gochain-btp, cosmos nodes repo. By default, they'll be in the home directory in the script. Then, follow the steps as follows:
+Update `const.sh` as per your requirement. Ideally, you should be okay with changing the fields under `CHANGE` header. 
+
+By default, this script uses archway node. The respective command to run neutron nodes is in `nodes.sh` file. Instead of running `make nodes`, you can run neutron and icon chains seaparately using `nodes.sh` script.
+
+Change the location of IBC-Integrations, gochain-btp, archway node repo. By default, they'll be in the home directory in the script. Then, follow the steps as follows:
 
 #### Chain Setup
 - To start nodes of icon and archway
