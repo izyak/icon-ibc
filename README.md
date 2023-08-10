@@ -65,15 +65,19 @@ cd ibc-relay
 make install
 ```
 
+After you run `make install` command, you can now use `rly` binary to interact with the relay
+
 
 
 ## Notes
-- The files nodes.sh contains guide to start and stop icon and archway images. 
+- The files `nodes.sh` contains guide to start and stop icon and archway images. 
 - This script deploys a mock-dapp on the IBC-Integrations repo. This can be replaced with your dapp as well.
 
 
 ## Usage
 Update `const.sh` as per your requirement. Ideally, you should be okay with changing the fields under `CHANGE` header. 
+
+If you are not sure on how to load wallets required for deploying and running the relay and get funds on them, read [this](./docs/keys.md) guide.
 
 By default, this script uses archway node. The respective command to run neutron nodes is in `nodes.sh` file. Instead of running `make nodes`, you can run neutron and icon chains seaparately using `nodes.sh` script.
 
@@ -110,7 +114,7 @@ Change the location of IBC-Integrations, gochain-btp, archway node repo. By defa
 
 #### Send Packets
 - On another terminal, run the following command
-	- Send packet from ICON
+	- Send packet from Icon chain
 		```sh
 		./icon.sh -m
 
