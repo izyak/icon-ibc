@@ -148,7 +148,7 @@ function deploy_xcall_dapp() {
     deploy_contract $CONTRACT_FILE_JAVA_XCALL_DAPP $CONTRACT_ADDR_JAVA_XCALL_DAPP _callService=${xcall}
 
     local xcall_connection_src=$(cat ${CONTRACT_ADDR_JAVA_XCALL_CONNECTION})
-    local xcall_connection_dst="hehehehe" # $(cat ${CONTRACT_ADDR_WASM_XCALL_CONNECTION})
+    local xcall_connection_dst=$(cat ${CONTRACT_ADDR_WASM_XCALL_CONNECTION})
     local xcall_dapp=$(cat ${CONTRACT_ADDR_JAVA_XCALL_DAPP})
 
     icon_send_tx ${xcall_dapp} "addConnection" nid=${WASM_NETWORK_ID} source=${xcall_connection_src} destination=${xcall_connection_dst}
