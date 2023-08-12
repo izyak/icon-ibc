@@ -10,8 +10,8 @@ export ICON_NET=goloop 		## [ goloop, testnet]
 ##############################     CHANGE     ###################################
 #################################################################################
 
-export IBC_RELAY=$HOME/ibriz/ibc/ibc-relay
-export IBC_INTEGRATION=$HOME/ibriz/ibc/IBC-Integration
+export IBC_RELAY=$HOME/ibc-relay
+export IBC_INTEGRATION=$HOME/IBC-Integration
 
 export ICON_DOCKER_PATH=$HOME/gochain-btp
 export WASM_DOCKER_PATH=$HOME/archway
