@@ -16,7 +16,8 @@ export IBC_INTEGRATION=$HOME/IBC-Integration
 export ICON_DOCKER_PATH=$HOME/gochain-btp
 export WASM_DOCKER_PATH=$HOME/archway
 
-export ICON_WALLET=$HOME/keystore/godWallet.json
+export ICON_WALLET_NAME=godWallet
+export ICON_WALLET=$HOME/keystore/${ICON_WALLET_NAME}.json
 export ICON_PASSWORD=gochain
 
 export WASM_WALLET=godWallet
