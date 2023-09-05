@@ -100,7 +100,7 @@ function setup_contracts() {
     local xcall=$(cat $CONTRACT_ADDR_JAVA_XCALL)
     require_contract_addr $xcall
 
-    deploy_contract $CONTRACT_FILE_JAVA_XCALL_CONNECTION $CONTRACT_ADDR_JAVA_XCALL_CONNECTION _xCall=${xcall} _ibc=${ibc_handler} port=${ICON_PORT_ID}
+    deploy_contract $CONTRACT_FILE_JAVA_XCALL_CONNECTION $CONTRACT_ADDR_JAVA_XCALL_CONNECTION _xCall=${xcall} _ibc=${ibc_handler} _port=${ICON_PORT_ID}
     local xcall_connection=$(cat $CONTRACT_ADDR_JAVA_XCALL_CONNECTION)
     require_contract_addr $xcall_connection
 
@@ -128,7 +128,7 @@ function configure_connection() {
         conn_id=$(yq -e .paths.${RELAY_PATH_NAME}.dst.connection-id $RELAY_CFG)
     fi
 
-    local dst_port_id=$ICON_PORT_ID
+    local dst_port_id=$WASM_PORT_ID
     local xcall_connection=$(cat $CONTRACT_ADDR_JAVA_XCALL_CONNECTION)
     icon_send_tx $xcall_connection "configureConnection" \
         connectionId=${conn_id}  counterpartyPortId=${dst_port_id} \
@@ -136,7 +136,7 @@ function configure_connection() {
         timeoutHeight=1000000
 
     local xcall=$(cat $CONTRACT_ADDR_JAVA_XCALL)
-    icon_send_tx $xcall "setDefaultConnection" nid=${WASM_NETWORK_ID} connection=${xcall_connection}
+    icon_send_tx $xcall "setDefaultConnection" _nid=${WASM_NETWORK_ID} _connection=${xcall_connection}
 }
 
 function deploy_xcall_dapp() {
