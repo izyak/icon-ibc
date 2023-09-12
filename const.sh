@@ -1,16 +1,16 @@
 #!/bin/bash
 
 export COSMOS=archway 		## [ neutron, archway ]
-export COSMOS_NET=local 	## [ local, testnet ]
+export COSMOS_NET=testnet 	## [ local, testnet ]
 export ICON=icon
-export ICON_NET=goloop 		## [ goloop, berlin, lisbon]
+export ICON_NET=berlin 		## [ goloop, berlin, lisbon]
 
 #################################################################################
 ##############################     CHANGE     ###################################
 #################################################################################
 
-export IBC_RELAY=$HOME/ibriz/ibc/ibc-relay
-export IBC_INTEGRATION=$HOME/ibriz/ibc/IBC-Integration
+export IBC_RELAY=$HOME/ibc-relay
+export IBC_INTEGRATION=$HOME/IBC-Integration
 
 export ICON_DOCKER_PATH=$HOME/gochain-btp
 export WASM_DOCKER_PATH=$HOME/archway
