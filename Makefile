@@ -13,6 +13,12 @@ wallets:
 contracts:
 	./icon.sh --setup
 	./wasm.sh --setup
+	./icon.sh --configure-ibc
+	./wasm.sh --configure-ibc
+	./icon.sh --set-fee
+	./wasm.sh --set-fee
+	./icon.sh --set-protocol-fee
+	./wasm.sh --set-protocol-fee
 	./cfg.sh
 
 config:
@@ -24,5 +30,6 @@ handshake:
 # 	rly tx conn icon-archway
 # 	./icon.sh -c
 # 	./wasm.sh -c
+# 	./icon.sh -d
+# 	./wasm.sh -d
 # 	rly tx chan icon-archway --src-port=xcall --dst-port=xcall
-# 	rly tx chan icon-archway --src-port=0x7.icon-mock-module --dst-port=0x3.wasm-mock-module -o ordered

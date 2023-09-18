@@ -11,7 +11,7 @@ function log_stack() {
 	    local prefix="$(date '+%Y-%m-%d %H:%M:%S')"
 	    awk -v file="$file" -v date="$prefix" -v line=${BASH_LINENO[1]} -v funct=$cmd '
 		    BEGIN {
-		        printf "\033[0;34m%-20s\033[0;33m%-10s\033[0;36m%-4s\033[0;31m%-19s\n", date, file, line, funct;
+		        printf "\033[0;34m%-20s\033[0;33m%-10s\033[0;36m%-4s\033[0;31m%-25s\n", date, file, line, funct;
 		    }
 		'
 	fi
@@ -24,7 +24,7 @@ function log() {
 	local FUNC=${FUNCNAME[1]}
 	awk -v file="$FILE" -v date="$DATE" -v line=$LINE -v funct=$FUNC -v logx="$1" '
 	    BEGIN {
-	        printf "\033[0;34m%-20s\033[0;33m%-10s\033[0;36m%-4s\033[0;31m%-19s\033[0m%-50s\n", date, file, line, funct, logx;
+	        printf "\033[0;34m%-20s\033[0;33m%-10s\033[0;36m%-4s\033[0;31m%-25s\033[0m%-50s\n", date, file, line, funct, logx;
 	    }
 	'
 }

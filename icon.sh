@@ -89,7 +89,7 @@ function setup_base_contracts() {
 
     local ibc_handler=$(cat $CONTRACT_ADDR_JAVA_IBC_CORE)
     require_icon_contract_addr $ibc_handler
-    log "Create a network proposal to open BTP Network for the IBC Contract... after setup is over"
+    log "create a network proposal to open BTP Network for the IBC Contract after setup is over..."
     
     # local openBTPNetwork=openBTPNetwork
 
@@ -101,13 +101,6 @@ function setup_base_contracts() {
         deploy_contract $CONTRACT_FILE_JAVA_LIGHT_CLIENT $CONTRACT_ADDR_JAVA_LIGHT_CLIENT "$ICON_IBC_COMMON_ARGS" ibcHandler=${ibc_handler}
     fi
 
-    local tm_client=$(cat $CONTRACT_ADDR_JAVA_LIGHT_CLIENT)
-    require_icon_contract_addr $tm_client
-    local registerClient=registerClient
-
-    if [ ! -f $LOGS/"$ICON_CHAIN_ID"_"$registerClient" ]; then
-        icon_send_tx $ibc_handler $registerClient "$ICON_IBC_COMMON_ARGS" clientType="07-tendermint" client="${tm_client}"
-    fi
 
     if [ $(wordCount $CONTRACT_ADDR_JAVA_XCALL) -ne $ICON_CONTRACT_ADDR_LEN ]; then 
         deploy_contract $CONTRACT_FILE_JAVA_XCALL $CONTRACT_ADDR_JAVA_XCALL "$ICON_XCALL_COMMON_ARGS" networkId=${ICON_NETWORK_ID}
@@ -118,6 +111,18 @@ function setup_base_contracts() {
 
     if [ $(wordCount $CONTRACT_ADDR_JAVA_XCALL_CONNECTION) -ne $ICON_CONTRACT_ADDR_LEN ]; then 
         deploy_contract $CONTRACT_FILE_JAVA_XCALL_CONNECTION $CONTRACT_ADDR_JAVA_XCALL_CONNECTION "$ICON_XCALL_COMMON_ARGS" _xCall=${xcall} _ibc=${ibc_handler} _port=${ICON_PORT_ID}
+    fi
+}
+
+function configure_ibc() {
+    log_stack
+    local ibc_handler=$(cat $CONTRACT_ADDR_JAVA_IBC_CORE)
+    local tm_client=$(cat $CONTRACT_ADDR_JAVA_LIGHT_CLIENT)
+    require_icon_contract_addr $tm_client
+    local registerClient=registerClient
+
+    if [ ! -f $LOGS/"$ICON_CHAIN_ID"_"$registerClient" ]; then
+        icon_send_tx $ibc_handler $registerClient "$ICON_IBC_COMMON_ARGS" clientType="07-tendermint" client="${tm_client}"
     fi
 
     local xcall_connection=$(cat $CONTRACT_ADDR_JAVA_XCALL_CONNECTION)
@@ -145,13 +150,45 @@ function configure_connection() {
 
     local dst_port_id=$WASM_PORT_ID
     local xcall_connection=$(cat $CONTRACT_ADDR_JAVA_XCALL_CONNECTION)
-    icon_send_tx $xcall_connection "configureConnection" \
+    local configureConnection="configureConnection"
+    icon_send_tx $xcall_connection $configureConnection "$ICON_XCALL_COMMON_ARGS"\
         connectionId=${conn_id}  counterpartyPortId=${dst_port_id} \
         counterpartyNid=${WASM_NETWORK_ID} clientId=${client_id} \
-        timeoutHeight=1000000
+        timeoutHeight=${ICON_XCALL_TIMEOUT_HEIGHT}
+
+}
+
+function set_default_connection() {
+    log_stack
+    local xcall_connection=$(cat $CONTRACT_ADDR_JAVA_XCALL_CONNECTION)
 
     local xcall=$(cat $CONTRACT_ADDR_JAVA_XCALL)
-    icon_send_tx $xcall "setDefaultConnection" _nid=${WASM_NETWORK_ID} _connection=${xcall_connection}
+    local setDefaultConnection="setDefaultConnection"
+    if [ ! -f $LOGS/"$ICON_CHAIN_ID"_"$setDefaultConnection" ]; then
+        icon_send_tx $xcall $setDefaultConnection "$ICON_XCALL_COMMON_ARGS" _nid=${WASM_NETWORK_ID} _connection=${xcall_connection}
+    fi
+}
+
+function set_protocol_fee() {
+    log_stack
+    local xcall=$(cat $CONTRACT_ADDR_JAVA_XCALL)
+    require_icon_contract_addr $xcall
+    local setProtocolFee="setProtocolFee"
+    if [ ! -f $LOGS/"$ICON_CHAIN_ID"_"$setProtocolFee" ]; then
+        icon_send_tx $xcall $setProtocolFee "$ICON_XCALL_COMMON_ARGS" _protocolFee=${ICON_XCALL_PROTOCOL_FEE}
+    fi
+}
+
+function set_fee() {
+    log_stack
+
+    local xcall_connection=$(cat $CONTRACT_ADDR_JAVA_XCALL_CONNECTION)
+    require_icon_contract_addr $xcall_connection
+
+    local setFee="setFee"
+    if [ ! -f $LOGS/"$ICON_CHAIN_ID"_"$setFee" ]; then
+        icon_send_tx $xcall_connection $setFee "$ICON_XCALL_COMMON_ARGS" nid=${WASM_NETWORK_ID} packetFee=${ICON_PACKET_FEE} ackFee=${ICON_ACK_FEE}
+    fi
 }
 
 function generate_icon_wallets() {
@@ -161,17 +198,14 @@ function generate_icon_wallets() {
     password=$(generatePassword)
     echo $password > $ICON_XCALL_PASSWORD_FILE
     goloop ks gen -o $ICON_XCALL_WALLET -p $password
-    password=$(generatePassword)
-    echo $password > $ICON_RELAY_PASSWORD_FILE
-    goloop ks gen -o $ICON_RELAY_WALLET -p $password
 }
 
-SHORT=scw
-LONG=setup,configure-connection,wallets
+SHORT=sicdwfp
+LONG=setup,configure-ibc,configure-connection,default-connection,wallets,set-fee,set-protocol-fee
 
 options=$(getopt -o $SHORT --long $LONG -n 'icon.sh' -- "$@")
 if [ $? -ne 0 ]; then
-    echo "Usage: $0 [-s] [-c] [-w] " >&2
+    echo "Usage: $0 [-s] [-i] [-c] [-d] [-w] [-f] [-p]" >&2
     exit 1
 fi
 
@@ -180,8 +214,12 @@ eval set -- "$options"
 while true; do
     case "$1" in
         -s|--setup) setup_base_contracts; shift ;;
+        -i|--configure-ibc) configure_ibc; shift ;;
         -c|--configure-connection) configure_connection; shift ;;
+        -d|--default-connection) set_default_connection; shift ;;
         -w|--wallets) generate_icon_wallets; shift ;;
+        -f|--set-fee) set_fee; shift ;;
+        -p|--set-protocol-fee) set_protocol_fee; shift ;;
         --) shift; break ;;
         *) echo "Internal error!"; exit 1 ;;
     esac

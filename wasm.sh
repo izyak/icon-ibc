@@ -78,14 +78,6 @@ function setup_base_contracts() {
 		deploy_contract $CONTRACT_FILE_WASM_LIGHT_CLIENT $CONTRACT_ADDR_WASM_LIGHT_CLIENT ${client_args} "$WASM_IBC_COMMON_ARGS" $WASM_IBC_WALLET
 	fi
 
-	local light_client=$(cat $CONTRACT_ADDR_WASM_LIGHT_CLIENT)
-	local register_client=register_client
-	local register_client_args="{\"$register_client\":{\"client_type\":\"iconclient\",\"client_address\":\"$light_client\"}}"
-	
-	if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$register_client" ]; then
-		execute_contract ${ibc_core} $register_client ${register_client_args} "$WASM_IBC_COMMON_ARGS"
-	fi
-
 	local xcall_args="{\"network_id\":\"${WASM_NETWORK_ID}\",\"denom\":\"${WASM_TOKEN}\"}"
 	
 	if [ $(wordCount $CONTRACT_ADDR_WASM_XCALL) -ne $COSMOS_CONTRACT_ADDR_LEN ]; then 
@@ -98,8 +90,22 @@ function setup_base_contracts() {
 	if [ $(wordCount $CONTRACT_ADDR_WASM_XCALL_CONNECTION) -ne $COSMOS_CONTRACT_ADDR_LEN ]; then   
 		deploy_contract $CONTRACT_FILE_WASM_XCALL_CONNECTION $CONTRACT_ADDR_WASM_XCALL_CONNECTION ${connection_args} "$WASM_XCALL_COMMON_ARGS" $WASM_XCALL_WALLET
 	fi
+}
+
+function configure_ibc() {
+	log_stack
+
+	local ibc_core=$(cat $CONTRACT_ADDR_WASM_IBC_CORE)
+	local light_client=$(cat $CONTRACT_ADDR_WASM_LIGHT_CLIENT)
+	local register_client=register_client
+	local register_client_args="{\"$register_client\":{\"client_type\":\"iconclient\",\"client_address\":\"$light_client\"}}"
+	
+	if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$register_client" ]; then
+		execute_contract ${ibc_core} $register_client ${register_client_args} "$WASM_IBC_COMMON_ARGS"
+	fi
 
 	local xcall_connection_addr=$(cat ${CONTRACT_ADDR_WASM_XCALL_CONNECTION})
+	local ibc_core=$(cat $CONTRACT_ADDR_WASM_IBC_CORE)
 	local bind_port=bind_port
 	local bind_port_args="{\"$bind_port\":{\"port_id\":\"$WASM_PORT_ID\",\"address\":\"$xcall_connection_addr\"}}"
 
@@ -123,36 +129,69 @@ function configure_connection() {
     fi
 
     local dst_port_id=$ICON_PORT_ID
+    local configure_connection=configure_connection
 
-    local configure_args="{\"configure_connection\":{\"connection_id\":\"$conn_id\",\"counterparty_port_id\":\"$dst_port_id\",\"counterparty_nid\":\"$ICON_NETWORK_ID\",\"client_id\":\"${client_id}\",\"timeout_height\":30000}}"
+    local configure_args="{\"$configure_connection\":{\"connection_id\":\"$conn_id\",\"counterparty_port_id\":\"$dst_port_id\",\"counterparty_nid\":\"$ICON_NETWORK_ID\",\"client_id\":\"${client_id}\",\"timeout_height\":${WASM_XCALL_TIMEOUT_HEIGHT}}}"
     local xcall_connection=$(cat ${CONTRACT_ADDR_WASM_XCALL_CONNECTION})
 
-    execute_contract $xcall_connection $configure_args
+    if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$configure_connection" ]; then
+    	execute_contract $xcall_connection $configure_connection $configure_args "$WASM_XCALL_COMMON_ARGS"
+	fi
+}
+
+function set_default_connection() {
+	log_stack
+	local xcall=$(cat $CONTRACT_ADDR_WASM_XCALL)
+	local xcall_connection=$(cat ${CONTRACT_ADDR_WASM_XCALL_CONNECTION})
+    local set_default_connection=set_default_connection
+    local default_conn_args="{\"$set_default_connection\":{\"nid\":\"$ICON_NETWORK_ID\",\"address\":\"$xcall_connection\"}}"
+
+    if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$set_default_connection" ]; then
+    	execute_contract $xcall $set_default_connection $default_conn_args "$WASM_XCALL_COMMON_ARGS"
+    fi
+}
+
+function set_protocol_fee() {
+	log_stack
 
     local xcall=$(cat $CONTRACT_ADDR_WASM_XCALL)
-    local default_conn_args="{\"set_default_connection\":{\"nid\":\"$ICON_NETWORK_ID\",\"address\":\"$xcall_connection\"}}"
-    execute_contract $xcall $default_conn_args
+    local set_protocol_fee="set_protocol_fee"
+    local set_protocol_fee_args="{\"$set_protocol_fee\":{\"value\":\"$WASM_XCALL_PROTOCOL_FEE\"}}"
+    if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$set_protocol_fee" ]; then
+        execute_contract $xcall $set_protocol_fee $set_protocol_fee_args "$WASM_XCALL_COMMON_ARGS"
+    fi
+
+}
+
+function set_fee() {
+    log_stack
+
+    local xcall_connection=$(cat $CONTRACT_ADDR_WASM_XCALL_CONNECTION)
+    local set_fees="set_fee"
+    local set_fees_args="{\"$set_fees\":{\"nid\":\"$ICON_NETWORK_ID\",\"packet_fee\":\"$WASM_PACKET_FEE\",\"ack_fee\":\"$WASM_ACK_FEE\"}}"
+    if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$set_fees" ]; then
+    	execute_contract $xcall_connection $set_fees $set_fees_args "$WASM_XCALL_COMMON_ARGS"
+    fi
 }
 
 function generate_wasm_wallets() {
 	local mnemonic=$(${WASM_BIN} keys add $WASM_IBC_WALLET --output json | jq -r .mnemonic)
 	echo $mnemonic > $KEYSTORE/"$WASM_IBC_WALLET"_mnemonic.txt
 	archwayd keys show $WASM_IBC_WALLET --output json | jq -r '[.name, .address] | @tsv'
+
 	mnemonic=$(${WASM_BIN} keys add $WASM_XCALL_WALLET --output json | jq -r .mnemonic)
 	echo $mnemonic > $KEYSTORE/"$WASM_XCALL_WALLET"_mnemonic.txt
 	archwayd keys show $WASM_XCALL_WALLET --output json | jq -r '[.name, .address] | @tsv'
-	mnemonic=$(${WASM_BIN} keys add $WASM_RELAY_WALLET --output json | jq -r .mnemonic)
-	echo $mnemonic > $KEYSTORE/"$WASM_RELAY_WALLET"_mnemonic.txt
-	archwayd keys show $WASM_RELAY_WALLET --output json | jq -r '[.name, .address] | @tsv'
+
 }
 
 
-SHORT=scw
-LONG=setup,configure-connection,wallets
+SHORT=sicdwfp
+LONG=setup,configure-ibc,configure-connection,default-connection,wallets,set-fee,set-protocol-fee
 
 options=$(getopt -o $SHORT --long $LONG -n 'wasm.sh' -- "$@")
 if [ $? -ne 0 ]; then
-    echo "Usage: $0 [-s] [-c] [-w]" >&2
+    echo "Usage: $0 [-s] [-i] [-c] [-d] [-w] [-f] [-p]" >&2
     exit 1
 fi
 
@@ -161,8 +200,12 @@ eval set -- "$options"
 while true; do
     case "$1" in
         -s|--setup) setup_base_contracts; shift ;;
+        -i|--configure-ibc) configure_ibc; shift ;;
         -c|--configure-connection) configure_connection; shift ;;
+        -d|--default-connection) set_default_connection; shift ;;
         -w|--wallets) generate_wasm_wallets; shift ;;
+        -f|--set-fee) set_fee; shift ;;
+        -p|--set-protocol-fee) set_protocol_fee; shift ;;
         --) shift; break ;;
         *) echo "Internal error!"; exit 1 ;;
     esac
