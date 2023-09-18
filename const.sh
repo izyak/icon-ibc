@@ -52,8 +52,8 @@ export ICON_ACK_FEE=2000000000000000000 # 2 ICX
 export WASM_XCALL_PROTOCOL_FEE=1000000000000000000 # 1aconst
 export WASM_PACKET_FEE=500000000000000000 # 0.5aconst
 export WASM_ACK_FEE=500000000000000000 # 0.5aconst
-export ICON_XCALL_TIMEOUT_HEIGHT=1207360 
-export WASM_XCALL_TIMEOUT_HEIGHT=483840
+export ICON_XCALL_TIMEOUT_HEIGHT=483840 # timeout height to be set on icon
+export WASM_XCALL_TIMEOUT_HEIGHT=1207360 # timeout height to be set on wasm 
 
 export RELAY_CFG=$HOME/.relayer/config/config.yaml
 export RELAY_PATH_NAME=icon-archway
