@@ -22,23 +22,18 @@ export KEYSTORE=$PWD/keystore
 
 export ICON_IBC_WALLET_NAME=ibc_wallet
 export ICON_XCALL_WALLET_NAME=xcall_wallet
-export ICON_RELAY_WALLET_NAME=relay_wallet
 
 export ICON_IBC_WALLET=$KEYSTORE/${ICON_IBC_WALLET_NAME}.json
 export ICON_XCALL_WALLET=$KEYSTORE/${ICON_XCALL_WALLET_NAME}.json
-export ICON_RELAY_WALLET=$KEYSTORE/${ICON_RELAY_WALLET_NAME}.json
 
 export ICON_IBC_PASSWORD_FILE=$KEYSTORE/${ICON_IBC_WALLET_NAME}_password.txt
 export ICON_XCALL_PASSWORD_FILE=$KEYSTORE/${ICON_XCALL_WALLET_NAME}_password.txt
-export ICON_RELAY_PASSWORD_FILE=$KEYSTORE/${ICON_RELAY_WALLET_NAME}_password.txt
 
 export ICON_IBC_PASSWORD=$(cat $ICON_IBC_PASSWORD_FILE) > /dev/null
 export ICON_XCALL_PASSWORD=$(cat $ICON_XCALL_PASSWORD_FILE) > /dev/null
-export ICON_RELAY_PASSWORD=$(cat $ICON_RELAY_PASSWORD_FILE) > /dev/null
 
 export WASM_IBC_WALLET=ibc_wallet
 export WASM_XCALL_WALLET=xcall_wallet
-export WASM_RELAY_WALLET=relay_wallet
 
 export WASM_EXTRA=" " # "-keyring-backend test"
 export WASM_BIN=archwayd
