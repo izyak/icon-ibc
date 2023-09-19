@@ -7,9 +7,6 @@ source utils.sh
 BACKUP_RLY_CFG_FILE=$HOME/.relayer/config/config_backup.yaml
 KEY_DIR=$HOME/.relayer/keys
 
-mkdir -p $KEY_DIR/${ICON_CHAIN_ID}
-cp $ICON_RELAY_WALLET $KEY_DIR/${ICON_CHAIN_ID}/
-
 wasm_ibc=$(cat $CONTRACT_ADDR_WASM_IBC_CORE)
 icon_ibc=$(cat $CONTRACT_ADDR_JAVA_IBC_CORE)
 
@@ -29,7 +26,7 @@ chains:
     type: wasm
     value:
       key-directory: $KEY_DIR 
-      key: $WASM_RELAY_WALLET
+      key: relayWallet
       chain-id: $WASM_CHAIN_ID
       rpc-addr: $WASM_NODE
       account-prefix: $WASM_PREFIX
@@ -55,8 +52,8 @@ chains:
       chain-id: $ICON_CHAIN_ID
       rpc-addr: $ICON_NODE
       timeout: 30s
-      keystore: $ICON_RELAY_WALLET_NAME 
-      password: $ICON_RELAY_PASSWORD
+      keystore: relayWallet 
+      password: gochain
       icon-network-id: $ICON_NID
       btp-network-id: $(hex2dec $btp_network_id)
       btp-network-type-id: 1
