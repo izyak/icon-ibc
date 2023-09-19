@@ -30,7 +30,7 @@ rm urls.txt
 
 # download assets
 for url in "${urls[@]}"; do
-  curl -O "$url"
+  curl -LO "$url"
 done
 
 

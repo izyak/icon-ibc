@@ -2,7 +2,7 @@
 
 # Update package lists and install necessary packages
 sudo apt-get update && \
-sudo apt-get install -y curl sudo gcc git make bc jq vim wget
+sudo apt-get install -y curl gcc git make bc jq
 
 # Download and install Go 1.20
 curl -O https://dl.google.com/go/go1.20.linux-amd64.tar.gz && \
