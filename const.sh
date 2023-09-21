@@ -3,7 +3,7 @@
 export COSMOS=archway 		## [ neutron, archway ]
 export COSMOS_NET=testnet 	## [ local, testnet ]
 export ICON=icon
-export ICON_NET=berlin 		## [ goloop, berlin, lisbon]
+export ICON_NET=lisbon 		## [ goloop, berlin, lisbon]
 
 #################################################################################
 ##############################     CHANGE     ###################################
@@ -26,29 +26,30 @@ export ICON_XCALL_WALLET_NAME=xcall_wallet
 export ICON_IBC_WALLET=$KEYSTORE/${ICON_IBC_WALLET_NAME}.json
 export ICON_XCALL_WALLET=$KEYSTORE/${ICON_XCALL_WALLET_NAME}.json
 
-export ICON_IBC_PASSWORD_FILE=$KEYSTORE/${ICON_IBC_WALLET_NAME}_password.txt
-export ICON_XCALL_PASSWORD_FILE=$KEYSTORE/${ICON_XCALL_WALLET_NAME}_password.txt
+# export ICON_IBC_PASSWORD_FILE=$KEYSTORE/${ICON_IBC_WALLET_NAME}_password.txt
+# export ICON_XCALL_PASSWORD_FILE=$KEYSTORE/${ICON_XCALL_WALLET_NAME}_password.txt
 
-export ICON_IBC_PASSWORD=$(cat $ICON_IBC_PASSWORD_FILE) > /dev/null
-export ICON_XCALL_PASSWORD=$(cat $ICON_XCALL_PASSWORD_FILE) > /dev/null
+# export ICON_IBC_PASSWORD=$(cat $ICON_IBC_PASSWORD_FILE) > /dev/null
+# export ICON_XCALL_PASSWORD=$(cat $ICON_XCALL_PASSWORD_FILE) > /dev/null
 
 export WASM_IBC_WALLET=ibc_wallet
 export WASM_XCALL_WALLET=xcall_wallet
 
-export WASM_EXTRA=" " # "-keyring-backend test"
+export WASM_EXTRA=" --keyring-backend test "
 export WASM_BIN=archwayd
 
 export ICON_PORT_ID="xcall"
 export WASM_PORT_ID="xcall"
 
-export ICON_XCALL_PROTOCOL_FEE=5000000000000000000 # 5ICX
-export ICON_PACKET_FEE=2000000000000000000 #  2ICX
-export ICON_ACK_FEE=2000000000000000000 # 2 ICX
-export WASM_XCALL_PROTOCOL_FEE=1000000000000000000 # 1aconst
-export WASM_PACKET_FEE=500000000000000000 # 0.5aconst
-export WASM_ACK_FEE=500000000000000000 # 0.5aconst
+export ICON_XCALL_PROTOCOL_FEE=100000000000000000 # 0.1 ICX
+export ICON_PACKET_FEE=100000000000000000 #  0.1 ICX
+export ICON_ACK_FEE=100000000000000000 # 0.1 ICX
+export WASM_XCALL_PROTOCOL_FEE=5000000000000000 #  0.005 aconst
+export WASM_PACKET_FEE=5000000000000000 #  0.005 aconst
+export WASM_ACK_FEE=5000000000000000 #  0.005 aconst
 export ICON_XCALL_TIMEOUT_HEIGHT=483840 # timeout height to be set on icon
 export WASM_XCALL_TIMEOUT_HEIGHT=1207360 # timeout height to be set on wasm 
+
 
 export RELAY_CFG=$HOME/.relayer/config/config.yaml
 export RELAY_PATH_NAME=icon-archway
@@ -126,8 +127,8 @@ case $ICON_NET in
 	;;
 esac
 
-export ICON_IBC_COMMON_ARGS="--uri $ICON_NODE --nid $ICON_NID --step_limit 100000000000 --key_store $ICON_IBC_WALLET --key_password $ICON_IBC_PASSWORD "
-export ICON_XCALL_COMMON_ARGS="--uri $ICON_NODE --nid $ICON_NID --step_limit 100000000000 --key_store $ICON_XCALL_WALLET --key_password $ICON_XCALL_PASSWORD "
+export ICON_IBC_COMMON_ARGS="--uri $ICON_NODE --nid $ICON_NID --step_limit 100000000000 --key_store $ICON_IBC_WALLET"
+export ICON_XCALL_COMMON_ARGS="--uri $ICON_NODE --nid $ICON_NID --step_limit 100000000000 --key_store $ICON_XCALL_WALLET"
 #################################################################################
 
 export JAVASCORE_DIR=$IBC_INTEGRATION/artifacts/icon
