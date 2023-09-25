@@ -11,11 +11,11 @@ function icon_wait_tx() {
     [[ -z $tx_hash ]] && return
     log "tx_hash : ${tx_hash}"
     while :; do
-        goloop rpc \
+        /opt/ibc/bin/goloop rpc \
             --uri "$ICON_NODE" \
             txresult "$tx_hash" &>/dev/null && break || sleep 1
     done
-    local txr=$(goloop rpc --uri "$ICON_NODE" txresult "$tx_hash" 2>/dev/null)
+    local txr=$(/opt/ibc/bin/goloop rpc --uri "$ICON_NODE" txresult "$tx_hash" 2>/dev/null)
     local status=$(jq <<<"$txr" -r .status)
     [[ "$status" == 0x0 ]] && log "txn failed" && echo $txr && exit 0
     [[ "$status" == 0x1 ]] && log "txn successful" && rset=0
@@ -28,7 +28,7 @@ function save_address() {
     local tx_hash=$1
     local addr_loc=$2
     [[ -z $tx_hash ]] && return
-    local txr=$(goloop rpc --uri "$ICON_NODE" txresult "$tx_hash" 2>/dev/null)
+    local txr=$(/opt/ibc/bin/goloop rpc --uri "$ICON_NODE" txresult "$tx_hash" 2>/dev/null)
     local score_address=$(jq <<<"$txr" -r .scoreAddress)
     echo $score_address > $addr_loc
     log "contract address : $score_address"
@@ -50,7 +50,7 @@ function deploy_contract() {
     for i in "${@:4}"; do params+=("--param $i"); done
 
     local tx_hash=$(
-        goloop rpc sendtx deploy $jarFile \
+        /opt/ibc/bin/goloop rpc sendtx deploy $jarFile \
 	    	--content_type application/java \
 	    	--to cx0000000000000000000000000000000000000000 \
 	    	$commonArgs \
@@ -80,7 +80,7 @@ function icon_send_tx() {
     for i in "${@:4}"; do params+=("--param $i"); done
 
     local tx_hash=$(
-        goloop rpc sendtx call \
+        /opt/ibc/bin/goloop rpc sendtx call \
             --to "$address" \
             --method "$method" \
             $commonArgs \
@@ -219,10 +219,10 @@ function set_fee() {
 function generate_icon_wallets() {
     local password=$(generatePassword)
     echo $password > $ICON_IBC_PASSWORD_FILE
-    goloop ks gen -o $ICON_IBC_WALLET -p $password
+    /opt/ibc/bin/goloop ks gen -o $ICON_IBC_WALLET -p $password
     password=$(generatePassword)
     echo $password > $ICON_XCALL_PASSWORD_FILE
-    goloop ks gen -o $ICON_XCALL_WALLET -p $password
+    /opt/ibc/bin/goloop ks gen -o $ICON_XCALL_WALLET -p $password
 }
 
 SHORT=sicdwfp

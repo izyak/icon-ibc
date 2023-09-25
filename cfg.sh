@@ -10,7 +10,7 @@ KEY_DIR=$HOME/.relayer/keys
 wasm_ibc=$(cat $CONTRACT_ADDR_WASM_IBC_CORE)
 icon_ibc=$(cat $CONTRACT_ADDR_JAVA_IBC_CORE)
 
-btp_network_id=$(goloop rpc btpnetworktype --uri $ICON_NODE 0x1 | jq -r '.openNetworkIDs[-1]')
+btp_network_id=$(/opt/ibc/bin/goloop rpc btpnetworktype --uri $ICON_NODE 0x1 | jq -r '.openNetworkIDs[-1]')
 
 cp $RELAY_CFG $BACKUP_RLY_CFG_FILE
 rm $RELAY_CFG
