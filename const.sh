@@ -18,7 +18,7 @@ export WASM_DOCKER_PATH=$HOME/archway
 export COSMOS_CONTRACT_ADDR_LEN=66
 export ICON_CONTRACT_ADDR_LEN=42
 
-export KEYSTORE=$PWD/keystore
+export KEYSTORE=/opt/deployer/root/keystore
 
 export ICON_IBC_WALLET_NAME=ibc_wallet
 export ICON_XCALL_WALLET_NAME=xcall_wallet

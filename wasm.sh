@@ -116,27 +116,42 @@ function configure_ibc() {
 
 function configure_connection() {
 	log_stack
-	local src_chain_id=$(yq -e .paths.${RELAY_PATH_NAME}.src.chain-id $RELAY_CFG)
-    local dst_chain_id=$(yq -e .paths.${RELAY_PATH_NAME}.dst.chain-id $RELAY_CFG)
-    local client_id=""
-    local conn_id=""
-    if [[ $src_chain_id == $WASM_CHAIN_ID ]]; then
-        client_id=$(yq -e .paths.${RELAY_PATH_NAME}.src.client-id $RELAY_CFG)
-        conn_id=$(yq -e .paths.${RELAY_PATH_NAME}.src.connection-id $RELAY_CFG)
-    elif [[ $dst_chain_id == $WASM_CHAIN_ID ]]; then
-        client_id=$(yq -e .paths.${RELAY_PATH_NAME}.dst.client-id $RELAY_CFG)
-        conn_id=$(yq -e .paths.${RELAY_PATH_NAME}.dst.connection-id $RELAY_CFG)
+	# local src_chain_id=$(yq -e .paths.${RELAY_PATH_NAME}.src.chain-id $RELAY_CFG)
+    # local dst_chain_id=$(yq -e .paths.${RELAY_PATH_NAME}.dst.chain-id $RELAY_CFG)
+    # local client_id=""
+    # local conn_id=""
+    # if [[ $src_chain_id == $WASM_CHAIN_ID ]]; then
+    #     client_id=$(yq -e .paths.${RELAY_PATH_NAME}.src.client-id $RELAY_CFG)
+    #     conn_id=$(yq -e .paths.${RELAY_PATH_NAME}.src.connection-id $RELAY_CFG)
+    # elif [[ $dst_chain_id == $WASM_CHAIN_ID ]]; then
+    #     client_id=$(yq -e .paths.${RELAY_PATH_NAME}.dst.client-id $RELAY_CFG)
+    #     conn_id=$(yq -e .paths.${RELAY_PATH_NAME}.dst.connection-id $RELAY_CFG)
+    # fi
+
+    local client_id=$1
+    local conn_id=$2
+
+    echo "Client_id: " $client_id
+    echo "Conn_id: " $conn_id
+
+    read -p "Confirm? y/N " confirm
+
+    if [[ $confirm == "y" ]]; then 
+        log "confirmed params for configure connection"
+
+	    # local dst_port_id=$ICON_PORT_ID
+	    # local configure_connection=configure_connection
+
+	    # local configure_args="{\"$configure_connection\":{\"connection_id\":\"$conn_id\",\"counterparty_port_id\":\"$dst_port_id\",\"counterparty_nid\":\"$ICON_NETWORK_ID\",\"client_id\":\"${client_id}\",\"timeout_height\":${WASM_XCALL_TIMEOUT_HEIGHT}}}"
+	    # local xcall_connection=$(cat ${CONTRACT_ADDR_WASM_XCALL_CONNECTION})
+
+	    # if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$configure_connection" ]; then
+	    # 	execute_contract $xcall_connection $configure_connection $configure_args "$WASM_XCALL_COMMON_ARGS"
+		# fi
+	else
+        log "Exiting"
+        exit 0
     fi
-
-    local dst_port_id=$ICON_PORT_ID
-    local configure_connection=configure_connection
-
-    local configure_args="{\"$configure_connection\":{\"connection_id\":\"$conn_id\",\"counterparty_port_id\":\"$dst_port_id\",\"counterparty_nid\":\"$ICON_NETWORK_ID\",\"client_id\":\"${client_id}\",\"timeout_height\":${WASM_XCALL_TIMEOUT_HEIGHT}}}"
-    local xcall_connection=$(cat ${CONTRACT_ADDR_WASM_XCALL_CONNECTION})
-
-    if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$configure_connection" ]; then
-    	execute_contract $xcall_connection $configure_connection $configure_args "$WASM_XCALL_COMMON_ARGS"
-	fi
 }
 
 function set_default_connection() {
@@ -201,7 +216,7 @@ while true; do
     case "$1" in
         -s|--setup) setup_base_contracts; shift ;;
         -i|--configure-ibc) configure_ibc; shift ;;
-        -c|--configure-connection) configure_connection; shift ;;
+        -c|--configure-connection) configure_connection $3 $4 ; shift ;;
         -d|--default-connection) set_default_connection; shift ;;
         -w|--wallets) generate_wasm_wallets; shift ;;
         -f|--set-fee) set_fee; shift ;;

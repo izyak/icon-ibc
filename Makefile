@@ -40,10 +40,10 @@ wasm-set-protocol-fee:
 	./wasm.sh --set-protocol-fee
 
 icon-cfg-connection:
-	./icon.sh -c
+	./icon.sh -c ${client_id} ${conn_id}
 
 wasm-cfg-connection:
-	./wasm.sh -c
+	./wasm.sh -c ${client_id} ${conn_id}
 
 icon-default-connection:
 	./icon.sh -d
