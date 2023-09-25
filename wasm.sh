@@ -139,15 +139,15 @@ function configure_connection() {
     if [[ $confirm == "y" ]]; then 
         log "confirmed params for configure connection"
 
-	    # local dst_port_id=$ICON_PORT_ID
-	    # local configure_connection=configure_connection
+	    local dst_port_id=$ICON_PORT_ID
+	    local configure_connection=configure_connection
 
-	    # local configure_args="{\"$configure_connection\":{\"connection_id\":\"$conn_id\",\"counterparty_port_id\":\"$dst_port_id\",\"counterparty_nid\":\"$ICON_NETWORK_ID\",\"client_id\":\"${client_id}\",\"timeout_height\":${WASM_XCALL_TIMEOUT_HEIGHT}}}"
-	    # local xcall_connection=$(cat ${CONTRACT_ADDR_WASM_XCALL_CONNECTION})
+	    local configure_args="{\"$configure_connection\":{\"connection_id\":\"$conn_id\",\"counterparty_port_id\":\"$dst_port_id\",\"counterparty_nid\":\"$ICON_NETWORK_ID\",\"client_id\":\"${client_id}\",\"timeout_height\":${WASM_XCALL_TIMEOUT_HEIGHT}}}"
+	    local xcall_connection=$(cat ${CONTRACT_ADDR_WASM_XCALL_CONNECTION})
 
-	    # if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$configure_connection" ]; then
-	    # 	execute_contract $xcall_connection $configure_connection $configure_args "$WASM_XCALL_COMMON_ARGS"
-		# fi
+	    if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$configure_connection" ]; then
+	    	execute_contract $xcall_connection $configure_connection $configure_args "$WASM_XCALL_COMMON_ARGS"
+		fi
 	else
         log "Exiting"
         exit 0
