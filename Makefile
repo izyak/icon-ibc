@@ -45,6 +45,12 @@ icon-cfg-connection:
 wasm-cfg-connection:
 	./wasm.sh -c ${client_id} ${conn_id}
 
+icon-set-admin:
+	./icon.sh -a ${admin}
+
+wasm-set-admin:
+	./wasm.sh -a ${admin}
+	
 icon-default-connection:
 	./icon.sh -d
 

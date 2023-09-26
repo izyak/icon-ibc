@@ -206,6 +206,27 @@ function set_fee() {
     fi
 }
 
+function set_admin() {
+    log_stack
+    local adminAddr=$1
+
+    local xcall_connection=$(cat $CONTRACT_ADDR_JAVA_XCALL_CONNECTION)
+    require_icon_contract_addr $xcall_connection
+    local transferAdmin="transferAdmin"
+
+    if [ ! -f $LOGS/"$ICON_CHAIN_ID"_"$transferAdmin" ]; then
+        icon_send_tx $xcall_connection $transferAdmin "$ICON_XCALL_COMMON_ARGS" admin=$adminAddr
+    fi
+
+    local xcall=$(cat $CONTRACT_ADDR_JAVA_XCALL)
+    require_icon_contract_addr $xcall
+    local setAdmin="setAdmin"
+
+    if [ ! -f $LOGS/"$ICON_CHAIN_ID"_"$setAdmin" ]; then
+        icon_send_tx $xcall_connection $setAdmin "$ICON_XCALL_COMMON_ARGS" _address=$adminAddr
+    fi
+}
+
 function generate_icon_wallets() {
     local password=$(generatePassword)
     echo $password > $ICON_IBC_PASSWORD_FILE
@@ -215,12 +236,12 @@ function generate_icon_wallets() {
     /opt/ibc/bin/goloop ks gen -o $ICON_XCALL_WALLET -p $password
 }
 
-SHORT=sicdwfp
-LONG=setup,configure-ibc,configure-connection,default-connection,wallets,set-fee,set-protocol-fee
+SHORT=sicdwfpa
+LONG=setup,configure-ibc,configure-connection,default-connection,wallets,set-fee,set-protocol-fee,set-admin
 
 options=$(getopt -o $SHORT --long $LONG -n 'icon.sh' -- "$@")
 if [ $? -ne 0 ]; then
-    echo "Usage: $0 [-s] [-i] [-c] [-d] [-w] [-f] [-p]" >&2
+    echo "Usage: $0 [-s] [-i] [-c] [-d] [-w] [-f] [-p] [-a]" >&2
     exit 1
 fi
 
@@ -235,6 +256,7 @@ while true; do
         -w|--wallets) generate_icon_wallets; shift ;;
         -f|--set-fee) set_fee; shift ;;
         -p|--set-protocol-fee) set_protocol_fee; shift ;;
+        -a|--set-admin) set_admin $3; shift ;;
         --) shift; break ;;
         *) echo "Internal error!"; exit 1 ;;
     esac

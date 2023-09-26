@@ -189,6 +189,22 @@ function set_fee() {
     fi
 }
 
+function set_admin() {
+	log_stack
+	local xcall_admin=$1
+
+    local xcall=$(cat $CONTRACT_ADDR_WASM_XCALL)
+    local xcall_connection=$(cat $CONTRACT_ADDR_WASM_XCALL_CONNECTION)
+
+    local set_admin="set_admin"
+    local set_admin_args="{\"$set_admin\":{\"address\":\"$xcall_admin\"}}"
+    if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$set_admin" ]; then
+        execute_contract $xcall $set_admin $set_admin_args "$WASM_XCALL_COMMON_ARGS"
+        execute_contract $xcall_connection $set_admin $set_admin_args "$WASM_XCALL_COMMON_ARGS"
+    fi
+
+}
+
 function generate_wasm_wallets() {
 	local mnemonic=$(${WASM_BIN} keys add $WASM_IBC_WALLET --output json | jq -r .mnemonic)
 	echo $mnemonic > $KEYSTORE/"$WASM_IBC_WALLET"_mnemonic.txt
@@ -201,12 +217,12 @@ function generate_wasm_wallets() {
 }
 
 
-SHORT=sicdwfp
-LONG=setup,configure-ibc,configure-connection,default-connection,wallets,set-fee,set-protocol-fee
+SHORT=sicdwfpa
+LONG=setup,configure-ibc,configure-connection,default-connection,wallets,set-fee,set-protocol-fee,set-admin
 
 options=$(getopt -o $SHORT --long $LONG -n 'wasm.sh' -- "$@")
 if [ $? -ne 0 ]; then
-    echo "Usage: $0 [-s] [-i] [-c] [-d] [-w] [-f] [-p]" >&2
+    echo "Usage: $0 [-s] [-i] [-c] [-d] [-w] [-f] [-p] [-a]" >&2
     exit 1
 fi
 
@@ -221,6 +237,7 @@ while true; do
         -w|--wallets) generate_wasm_wallets; shift ;;
         -f|--set-fee) set_fee; shift ;;
         -p|--set-protocol-fee) set_protocol_fee; shift ;;
+        -a|--set-admin) set_admin; shift ;;
         --) shift; break ;;
         *) echo "Internal error!"; exit 1 ;;
     esac
