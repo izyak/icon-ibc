@@ -107,7 +107,7 @@ def extract_key_store_and_secret(secret_value):
 
 def decrypt_secret(encrypted_secret):
     try:
-        password = key_decryption(boto3.client('kms', region_name='us-east-1'))
+        password = key_decryption(boto3.client('kms', region_name=region_name))
     except Exception:
         logging.exception("Something went wrong with the demo!")
     # print(password)
@@ -159,8 +159,7 @@ def get_secrets(secret_names, region_name, directory):
 
 
 def get_secret_names(starting_string):
-    region = 'us-west-1'
-    client = boto3.client('secretsmanager', region_name=region)
+    client = boto3.client('secretsmanager', region_name=region_name)
     secrets = client.list_secrets()
     secret_names = [secret['Name'] for secret in secrets['SecretList'] if secret['Name'].startswith(starting_string)]
     return secret_names
