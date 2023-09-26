@@ -237,7 +237,7 @@ while true; do
         -w|--wallets) generate_wasm_wallets; shift ;;
         -f|--set-fee) set_fee; shift ;;
         -p|--set-protocol-fee) set_protocol_fee; shift ;;
-        -a|--set-admin) set_admin; shift ;;
+        -a|--set-admin) set_admin $3; shift ;;
         --) shift; break ;;
         *) echo "Internal error!"; exit 1 ;;
     esac

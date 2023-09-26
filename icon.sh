@@ -223,7 +223,7 @@ function set_admin() {
     local setAdmin="setAdmin"
 
     if [ ! -f $LOGS/"$ICON_CHAIN_ID"_"$setAdmin" ]; then
-        icon_send_tx $xcall_connection $setAdmin "$ICON_XCALL_COMMON_ARGS" _address=$adminAddr
+        icon_send_tx $xcall $setAdmin "$ICON_XCALL_COMMON_ARGS" _address=$adminAddr
     fi
 }
 
