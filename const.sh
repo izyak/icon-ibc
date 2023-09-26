@@ -1,9 +1,9 @@
 #!/bin/bash
 
 export COSMOS=archway 		## [ neutron, archway ]
-export COSMOS_NET=mainnet 	## [ local, testnet ]
+export COSMOS_NET=mainnet 	## [ local, testnet, mainnet ]
 export ICON=icon
-export ICON_NET=mainnet 		## [ goloop, berlin, lisbon]
+export ICON_NET=mainnet 	## [ goloop, berlin, lisbon]
 
 #################################################################################
 ##############################     CHANGE     ###################################
