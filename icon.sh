@@ -42,10 +42,6 @@ function deploy_contract() {
 	requireFile $jarFile "$jarFile does not exist"
 	log "deploying contract ${jarFile##*/}"
 
-    local walletName=$(echo $commonArgs | grep -oP -- '-key_store \K[^ ]*')
-    echo -n "Enter keystore password for $walletName: "
-    read -s password
-
 	local params=()
     for i in "${@:4}"; do params+=("--param $i"); done
 
@@ -54,7 +50,6 @@ function deploy_contract() {
 	    	--content_type application/java \
 	    	--to cx0000000000000000000000000000000000000000 \
 	    	$commonArgs \
-            --key_password $password \
 	    	${params[@]} | jq -r .
     )
    	icon_wait_tx "$tx_hash"
@@ -72,10 +67,6 @@ function icon_send_tx() {
 
     log "calling ${method}"
 
-    local walletName=$(echo $commonArgs | grep -oP -- '-key_store \K[^ ]*')
-    echo -n "Enter keystore password for $walletName: "
-    read -s password
-
     local params=()
     for i in "${@:4}"; do params+=("--param $i"); done
 
@@ -84,7 +75,6 @@ function icon_send_tx() {
             --to "$address" \
             --method "$method" \
             $commonArgs \
-            --key_password $password \
             ${params[@]} | jq -r .
     )
     icon_wait_tx "$tx_hash"

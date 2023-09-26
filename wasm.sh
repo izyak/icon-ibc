@@ -182,7 +182,7 @@ function set_fee() {
     log_stack
 
     local xcall_connection=$(cat $CONTRACT_ADDR_WASM_XCALL_CONNECTION)
-    local set_fees="set_fee"
+    local set_fees="set_fees"
     local set_fees_args="{\"$set_fees\":{\"nid\":\"$ICON_NETWORK_ID\",\"packet_fee\":\"$WASM_PACKET_FEE\",\"ack_fee\":\"$WASM_ACK_FEE\"}}"
     if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$set_fees" ]; then
     	execute_contract $xcall_connection $set_fees $set_fees_args "$WASM_XCALL_COMMON_ARGS"
