@@ -250,15 +250,15 @@ if __name__ == '__main__':
         "mainnet/icon/ibc_wallet",
         "mainnet/icon/xcall_wallet",
         "mainnet/archway/ibc_wallet",
-        "mainnet/archway/xcall_wallet",
+        "mainnet/archway/xcall_wallet"
     ]
     secret_names = [
         "mainnet/icon/ibc_wallet_secret",
         "mainnet/icon/xcall_wallet_secret",
         "mainnet/archway/ibc_wallet_secret",
-        "mainnet/archway/xcall_wallet_secret",
+        "mainnet/archway/xcall_wallet_secret"
     ]
-     save_directory = "/opt/deployer/root/keystore"
-     get_wallets(wallet_names, region_name, save_directory)
-     get_secrets(secret_names, region_name, save_directory)
-     load_archway_wallet(save_directory)
+    save_directory = "/opt/deployer/root/keystore"
+    get_wallets(wallet_names, region_name, save_directory)
+    get_secrets(secret_names, region_name, save_directory)
+    load_archway_wallet(save_directory)
