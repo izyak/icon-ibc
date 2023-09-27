@@ -8,17 +8,14 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 cd /opt/deployer/root/icon-ibc
-# Assign the first argument to a variable
-git clean -fdx
-git checkout .
+git stash
+git pull
 
 branch_or_commit="$1"
-
 # Perform the git checkout
 git checkout "$branch_or_commit"
 git pull
-git clean -fdx
-git checkout .
+
 
 # Check the exit status of the git command
 if [ $? -eq 0 ]; then

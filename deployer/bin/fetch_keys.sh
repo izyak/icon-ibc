@@ -10,6 +10,3 @@ if [ "$(archwayd keys list --keyring-backend test | wc -l)" == "2" ];then
 	exit 1
 fi
 echo "Successfully loaded Wallets !"
-# Cleanup secrets
-rm -rf /opt/deployer/root/keystore/*.key
-rm -rf /opt/deployer/root/keystore/secrets.json
