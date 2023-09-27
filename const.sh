@@ -26,8 +26,13 @@ export ICON_XCALL_WALLET_NAME=xcall_wallet
 export ICON_IBC_WALLET=$KEYSTORE/${ICON_IBC_WALLET_NAME}.json
 export ICON_XCALL_WALLET=$KEYSTORE/${ICON_XCALL_WALLET_NAME}.json
 
-export ICON_IBC_PASSWORD_FILE=$KEYSTORE/${ICON_IBC_WALLET_NAME}_secret.txt
-export ICON_XCALL_PASSWORD_FILE=$KEYSTORE/${ICON_XCALL_WALLET_NAME}_secret.txt
+# export ICON_IBC_PASSWORD_FILE=$KEYSTORE/${ICON_IBC_WALLET_NAME}_secret.txt
+# export ICON_XCALL_PASSWORD_FILE=$KEYSTORE/${ICON_XCALL_WALLET_NAME}_secret.txt
+
+export PASSWORD_FILE=$KEYSTORE/secrets.json
+export ICON_IBC_PASSWORD=$(grep 'icon_ibc_wallet_secret' $PASSWORD_FILE | awk -F\" '{print $4}') > /dev/null
+export ICON_XCALL_PASSWORD=$(grep 'icon_xcall_wallet_secret' $PASSWORD_FILE | awk -F\" '{print $4}') > /dev/null
+
 
 export WASM_IBC_WALLET=ibc_wallet
 export WASM_XCALL_WALLET=xcall_wallet
@@ -138,8 +143,8 @@ case $ICON_NET in
 	;;
 esac
 
-export ICON_IBC_COMMON_ARGS=" --uri $ICON_NODE --nid $ICON_NID --step_limit 4000000000 --key_store $ICON_IBC_WALLET --key_password $(cat $ICON_IBC_PASSWORD_FILE) "
-export ICON_XCALL_COMMON_ARGS=" --uri $ICON_NODE --nid $ICON_NID --step_limit 4000000000 --key_store $ICON_XCALL_WALLET --key_password $(cat $ICON_XCALL_PASSWORD_FILE) "
+export ICON_IBC_COMMON_ARGS=" --uri $ICON_NODE --nid $ICON_NID --step_limit 4000000000 --key_store $ICON_IBC_WALLET --key_password $ICON_IBC_PASSWORD "
+export ICON_XCALL_COMMON_ARGS=" --uri $ICON_NODE --nid $ICON_NID --step_limit 4000000000 --key_store $ICON_XCALL_WALLET --key_password $ICON_XCALL_PASSWORD "
 
 #################################################################################
 
