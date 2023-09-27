@@ -18,6 +18,8 @@ show_help() {
     echo "  icon-default-connection                 Set default connection for ICON"
     echo "  wasm-default-connection                 Set default connection for WASM"
     echo "  config                                  Create Relay config file"
+    echo "  icon-set-admin                          Set Admin for ICON"
+    echo "  wasm-set-admin                          Set Admin for WASM"
     echo "Flags:"
     echo "  -h, --help                help for make"
 }
@@ -67,6 +69,12 @@ case "$option" in
     ;;
   "wasm-cfg-connection")
     ./wasm.sh -c $arg1 $arg2
+    ;;
+  "icon-set-admin")
+	  ./icon.sh -a $arg1
+    ;;
+  "wasm-set-admin")
+	  ./wasm.sh -a $arg1
     ;;
   "icon-default-connection")
     ./icon.sh -d

@@ -26,8 +26,16 @@ export ICON_XCALL_WALLET_NAME=xcall_wallet
 export ICON_IBC_WALLET=$KEYSTORE/${ICON_IBC_WALLET_NAME}.json
 export ICON_XCALL_WALLET=$KEYSTORE/${ICON_XCALL_WALLET_NAME}.json
 
+<<<<<<< HEAD
 export ICON_IBC_PASSWORD_FILE=$KEYSTORE/${ICON_IBC_WALLET_NAME}_secret.txt
 export ICON_XCALL_PASSWORD_FILE=$KEYSTORE/${ICON_XCALL_WALLET_NAME}_secret.txt
+=======
+# export ICON_IBC_PASSWORD_FILE=$KEYSTORE/${ICON_IBC_WALLET_NAME}_password.txt
+# export ICON_XCALL_PASSWORD_FILE=$KEYSTORE/${ICON_XCALL_WALLET_NAME}_password.txt
+export ICON_PASSWORD_FILE="/opt/deployer/root/keystore/secrets.json"
+export ICON_IBC_PASSWORD=$(grep 'icon_ibc_wallet_secret' $ICON_PASSWORD_FILE | awk -F\" '{print $4}')
+export ICON_XCALL_PASSWORD=$(grep 'icon_xcall_wallet_secret' $ICON_PASSWORD_FILE | awk -F\" '{print $4}')
+>>>>>>> 1237e8e (add password envs)
 
 export WASM_IBC_WALLET=ibc_wallet
 export WASM_XCALL_WALLET=xcall_wallet
