@@ -77,6 +77,9 @@ configure-connection:
 	./icon.sh -d
 	./wasm.sh -d
 
+migrate:
+	./migrate.sh migrate ${wasm-file} ${contract-addr} ${migrate-args}
+
 handshake:
 	echo "Get the BTP Height to initialize light client with, then replace the btp block height and uncomment the following lines"
 # 	rly tx clients icon-archway --client-tp "10000000m" --btp-block-height 13257698
