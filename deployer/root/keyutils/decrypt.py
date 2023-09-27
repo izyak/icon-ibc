@@ -23,8 +23,8 @@ def read_ciphertext_blob(file_path):
         return None
 
 
-KEYID_TEXT_FILE = '/opt/deployer/root/kms_id'
-CIPHER_TEXT_FILE = "/opt/deployer/root/.cipher_text"
+KEYID_TEXT_FILE = '/opt/deployer/root/keyutils/kms_id'
+CIPHER_TEXT_FILE = "/opt/deployer/root/keyutils/.cipher_text"
 
 CIPHER_TEXT = read_ciphertext_blob(CIPHER_TEXT_FILE)
 
@@ -245,23 +245,20 @@ def load_archway_wallet(directory):
 
 
 if __name__ == '__main__':
-    # secret_names = get_secret_names('mainnet')
+    secret_names = get_secret_names('mainnet')
     wallet_names = [
         "mainnet/icon/ibc_wallet",
         "mainnet/icon/xcall_wallet",
         "mainnet/archway/ibc_wallet",
-        "mainnet/archway/xcall_wallet",
+        "mainnet/archway/xcall_wallet"
     ]
     secret_names = [
         "mainnet/icon/ibc_wallet_secret",
         "mainnet/icon/xcall_wallet_secret",
         "mainnet/archway/ibc_wallet_secret",
-        "mainnet/archway/xcall_wallet_secret",
+        "mainnet/archway/xcall_wallet_secret"
     ]
-    
     save_directory = "/opt/deployer/root/keystore"
-
     get_wallets(wallet_names, region_name, save_directory)
     get_secrets(secret_names, region_name, save_directory)
-
     load_archway_wallet(save_directory)
