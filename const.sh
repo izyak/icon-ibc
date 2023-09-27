@@ -143,8 +143,8 @@ case $ICON_NET in
 	;;
 esac
 
-export ICON_IBC_COMMON_ARGS=" --uri $ICON_NODE --nid $ICON_NID --step_limit 4000000000 --key_store $ICON_IBC_WALLET --key_password $(cat $ICON_IBC_PASSWORD_FILE) "
-export ICON_XCALL_COMMON_ARGS=" --uri $ICON_NODE --nid $ICON_NID --step_limit 4000000000 --key_store $ICON_XCALL_WALLET --key_password $(cat $ICON_XCALL_PASSWORD_FILE) "
+export ICON_IBC_COMMON_ARGS=" --uri $ICON_NODE --nid $ICON_NID --step_limit 4000000000 --key_store $ICON_IBC_WALLET --key_password $ICON_IBC_PASSWORD "
+export ICON_XCALL_COMMON_ARGS=" --uri $ICON_NODE --nid $ICON_NID --step_limit 4000000000 --key_store $ICON_XCALL_WALLET --key_password $ICON_XCALL_PASSWORD "
 
 #################################################################################
 
