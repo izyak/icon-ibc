@@ -1,9 +1,9 @@
 #!/bin/bash
 
 export COSMOS=archway 		## [ neutron, archway ]
-export COSMOS_NET=mainnet 	## [ local, testnet, mainnet ]
+export COSMOS_NET=testnet 	## [ local, testnet ]
 export ICON=icon
-export ICON_NET=mainnet 	## [ goloop, berlin, lisbon]
+export ICON_NET=lisbon 		## [ goloop, berlin, lisbon]
 
 #################################################################################
 ##############################     CHANGE     ###################################
@@ -18,7 +18,8 @@ export WASM_DOCKER_PATH=$HOME/archway
 export COSMOS_CONTRACT_ADDR_LEN=66
 export ICON_CONTRACT_ADDR_LEN=42
 
-export KEYSTORE=/opt/deployer/root/keystore
+export KEYSTORE=$PWD/keystore
+[ -d $KEYSTORE ] || KEYSTORE="/opt/deployer/root/keystore"
 
 export ICON_IBC_WALLET_NAME=ibc_wallet
 export ICON_XCALL_WALLET_NAME=xcall_wallet
@@ -26,16 +27,9 @@ export ICON_XCALL_WALLET_NAME=xcall_wallet
 export ICON_IBC_WALLET=$KEYSTORE/${ICON_IBC_WALLET_NAME}.json
 export ICON_XCALL_WALLET=$KEYSTORE/${ICON_XCALL_WALLET_NAME}.json
 
-<<<<<<< HEAD
-export ICON_IBC_PASSWORD_FILE=$KEYSTORE/${ICON_IBC_WALLET_NAME}_secret.txt
-export ICON_XCALL_PASSWORD_FILE=$KEYSTORE/${ICON_XCALL_WALLET_NAME}_secret.txt
-=======
-# export ICON_IBC_PASSWORD_FILE=$KEYSTORE/${ICON_IBC_WALLET_NAME}_password.txt
-# export ICON_XCALL_PASSWORD_FILE=$KEYSTORE/${ICON_XCALL_WALLET_NAME}_password.txt
-export ICON_PASSWORD_FILE="/opt/deployer/root/keystore/secrets.json"
-export ICON_IBC_PASSWORD=$(grep 'icon_ibc_wallet_secret' $ICON_PASSWORD_FILE | awk -F\" '{print $4}')
-export ICON_XCALL_PASSWORD=$(grep 'icon_xcall_wallet_secret' $ICON_PASSWORD_FILE | awk -F\" '{print $4}')
->>>>>>> 1237e8e (add password envs)
+export PASSWORD_FILE=$KEYSTORE/secrets.json
+export ICON_IBC_PASSWORD=$(grep 'icon_ibc_wallet_secret' $PASSWORD_FILE | awk -F\" '{print $4}') > /dev/null
+export ICON_XCALL_PASSWORD=$(grep 'icon_xcall_wallet_secret' $PASSWORD_FILE | awk -F\" '{print $4}') > /dev/null
 
 export WASM_IBC_WALLET=ibc_wallet
 export WASM_XCALL_WALLET=xcall_wallet
@@ -78,15 +72,8 @@ case $COSMOS in
 			export WASM_GAS=900000000000
 			export WASM_NETWORK_ID=archway
 			export WASM_PREFIX=archway
-		elif [[ $COSMOS_NET == "mainnet" ]]; then 
-			export WASM_NODE=https://rpc.mainnet.archway.io:443
-			export WASM_CHAIN_ID=archway-1
-			export WASM_TOKEN=aarch
-			export WASM_GAS=900000000000
-			export WASM_NETWORK_ID=archway
-			export WASM_PREFIX=archway
 		else
-			echo "Invalid cosmos chain selected. Ensure COSMOS_NET = local or testnet or mainnet "
+			echo "Invalid cosmos chain selected. Ensure COSMOS_NET = local or testnet "
 			exit 0
 		fi
 	;;
@@ -137,18 +124,10 @@ case $ICON_NET in
 		export ICON_DEBUG_NODE=https://lisbon.net.solidwallet.io/api/v3d
 		export ICON_NETWORK_ID="0x2.icon"
 	;;
-	"mainnet" )
-		export ICON_NID=1
-		export ICON_CHAIN_ID=mainnet
-		export ICON_NODE=https://ctz.solidwallet.io/api/v3/
-		export ICON_DEBUG_NODE=https://ctz.solidwallet.io/api/v3d
-		export ICON_NETWORK_ID="0x1.icon"
-	;;
 esac
 
-export ICON_IBC_COMMON_ARGS=" --uri $ICON_NODE --nid $ICON_NID --step_limit 4000000000 --key_store $ICON_IBC_WALLET --key_password $(cat $ICON_IBC_PASSWORD_FILE) "
-export ICON_XCALL_COMMON_ARGS=" --uri $ICON_NODE --nid $ICON_NID --step_limit 4000000000 --key_store $ICON_XCALL_WALLET --key_password $(cat $ICON_XCALL_PASSWORD_FILE) "
-
+export ICON_IBC_COMMON_ARGS="--uri $ICON_NODE --nid $ICON_NID --step_limit 100000000000 --key_store $ICON_IBC_WALLET"
+export ICON_XCALL_COMMON_ARGS="--uri $ICON_NODE --nid $ICON_NID --step_limit 100000000000 --key_store $ICON_XCALL_WALLET"
 #################################################################################
 
 export JAVASCORE_DIR=$IBC_INTEGRATION/artifacts/icon

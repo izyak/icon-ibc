@@ -20,6 +20,7 @@ show_help() {
     echo "  config                                  Create Relay config file"
     echo "  icon-set-admin                          Set Admin for ICON"
     echo "  wasm-set-admin                          Set Admin for WASM"
+    echo "  migrate                                 Migrate Contracts"
     echo "Flags:"
     echo "  -h, --help                help for make"
 }
@@ -33,6 +34,7 @@ fi
 option="$1"
 arg1="$2"
 arg2="$3"
+arg3="$4"
 cd /opt/deployer/root/icon-ibc
 
 case "$option" in
@@ -81,6 +83,9 @@ case "$option" in
     ;;
   "wasm-default-connection")
     ./wasm.sh -d
+    ;;
+  "migrate")
+    ./migrate.sh migrate $arg1 $arg2 $arg3
     ;;
   *)
     echo "Invalid option"
