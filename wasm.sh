@@ -12,13 +12,14 @@ function deploy_contract() {
 	local admin_wallet=$5
 	requireFile ${wasm_file} "${wasm_file} does not exist"
 	log "deploying contract ${wasm_file##*/}"
+	local contract_name=$(echo ${wasm_file##*/} | sed 's/\.wasm//')
 
 	local res=$(${WASM_BIN} tx wasm store $wasm_file $common_args   -y --output json -b block)
 	local code_id=$(echo $res | jq -r '.logs[0].events[] | select(.type=="store_code") | .attributes[] | select(.key=="code_id") | .value')
 	log "received code id ${code_id}"
 
 	local admin=$(${WASM_BIN} keys show $admin_wallet $WASM_EXTRA --output=json | jq -r .address)
-	local init_res=$(${WASM_BIN} tx wasm instantiate $code_id $init_args $common_args --label "github.com/izyak/icon-ibc" --admin $admin -y)
+	local init_res=$(${WASM_BIN} tx wasm instantiate $code_id $init_args $common_args --label ${contract_name} --admin $admin -y)
 
 	while :; do
 		local addr=$(${WASM_BIN} query wasm lca "${code_id}" --node $WASM_NODE --output json | jq -r '.contracts[-1]') 
