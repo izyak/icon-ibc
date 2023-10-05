@@ -87,6 +87,9 @@ case "$option" in
   "migrate")
     ./migrate.sh migrate $arg1 $arg2 $arg3
     ;;
+  "config")
+    ./cfg.sh
+    ;;
   *)
     echo "Invalid option"
     show_help
