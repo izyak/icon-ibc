@@ -49,7 +49,7 @@ export ICON_ACK_FEE=750000000000000000 # 0.75 ICX
 export WASM_XCALL_PROTOCOL_FEE=400000000000000000 #  0.4 arch
 export WASM_PACKET_FEE=600000000000000000 #  0.6 arch
 export WASM_ACK_FEE=600000000000000000 #  0.6 arch
-export ICON_XCALL_TIMEOUT_HEIGHT=483840 # timeout height to be set on icon
+export ICON_XCALL_TIMEOUT_HEIGHT=403200 # timeout height to be set on icon
 export WASM_XCALL_TIMEOUT_HEIGHT=1207360 # timeout height to be set on wasm 
 
 
