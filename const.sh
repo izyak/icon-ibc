@@ -92,7 +92,7 @@ case $COSMOS in
 			export WASM_NODE=https://rpc-falcron.pion-1.ntrn.tech:443
 			export WASM_CHAIN_ID=pion-1
 			export WASM_TOKEN=untrn
-			export WASM_GAS=100
+			export WASM_GAS=1
 			export WASM_NETWORK_ID=neutron
 			export WASM_PREFIX=neutron
 			export WASM_BIN=neutrond
