@@ -36,7 +36,6 @@ export WASM_IBC_WALLET=ibc_wallet
 export WASM_XCALL_WALLET=xcall_wallet
 
 export WASM_EXTRA=" --keyring-backend test "
-export WASM_BIN=archwayd
 
 export ICON_PORT_ID="xcall"
 export WASM_PORT_ID="xcall"
@@ -66,6 +65,7 @@ case $COSMOS in
 			export WASM_GAS=0.025
 			export WASM_NETWORK_ID=archway
 			export WASM_PREFIX=archway
+			export WASM_BIN=archwayd
 		elif [[ $COSMOS_NET == "testnet" ]]; then 
 			export WASM_NODE=https://rpc.constantine.archway.tech:443
 			export WASM_CHAIN_ID=constantine-3
@@ -73,6 +73,7 @@ case $COSMOS in
 			export WASM_GAS=900000000000
 			export WASM_NETWORK_ID=archway
 			export WASM_PREFIX=archway
+			export WASM_BIN=archwayd
 		else
 			echo "Invalid cosmos chain selected. Ensure COSMOS_NET = local or testnet "
 			exit 0
@@ -86,6 +87,7 @@ case $COSMOS in
 			export WASM_GAS=0.025
 			export WASM_NETWORK_ID=neutron
 			export WASM_PREFIX=neutron
+			export WASM_BIN=neutrond
 		elif [[ $COSMOS_NET == "testnet" ]]; then 
 			export WASM_NODE=https://rpc.constantine.archway.tech:443
 			export WASM_CHAIN_ID=pion-1
@@ -93,6 +95,7 @@ case $COSMOS in
 			export WASM_GAS=900000000000
 			export WASM_NETWORK_ID=neutron
 			export WASM_PREFIX=neutron
+			export WASM_BIN=neutrond
 		else
 			echo "Invalid cosmos chain selected. Ensure COSMOS_NET = local or testnet "
 			exit 0

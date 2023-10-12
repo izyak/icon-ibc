@@ -71,6 +71,13 @@ configure-connection:
 	./icon.sh -d
 	./wasm.sh -d
 
+neutron-setup:
+	sed -i 's/export COSMOS=archway/export COSMOS=neutron/' const.sh
+	./wasm.sh --setup
+	./wasm.sh --configure-ibc
+	./wasm.sh --set-fee
+	./wasm.sh --set-protocol-fee
+
 migrate:
 	./migrate.sh migrate ${wasm-file} ${contract-addr} ${migrate-args}
 
