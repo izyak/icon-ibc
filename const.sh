@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export COSMOS=archway 		## [ neutron, archway ]
+export COSMOS=neutron 		## [ neutron, archway ]
 export COSMOS_NET=mainnet 	## [ local, testnet, mainnet ]
 export ICON=icon
 export ICON_NET=mainnet 	## [ goloop, berlin, lisbon]
@@ -38,7 +38,6 @@ export WASM_IBC_WALLET=ibc_wallet
 export WASM_XCALL_WALLET=xcall_wallet
 
 export WASM_EXTRA=" --keyring-backend test "
-export WASM_BIN=archwayd
 
 export ICON_PORT_ID="xcall"
 export WASM_PORT_ID="xcall"
@@ -68,6 +67,7 @@ case $COSMOS in
 			export WASM_GAS=0.025
 			export WASM_NETWORK_ID=archway
 			export WASM_PREFIX=archway
+			export WASM_BIN=archwayd
 		elif [[ $COSMOS_NET == "testnet" ]]; then 
 			export WASM_NODE=https://rpc.constantine.archway.tech:443
 			export WASM_CHAIN_ID=constantine-3
@@ -75,6 +75,7 @@ case $COSMOS in
 			export WASM_GAS=900000000000
 			export WASM_NETWORK_ID=archway
 			export WASM_PREFIX=archway
+			export WASM_BIN=archwayd
 		elif [[ $COSMOS_NET == "mainnet" ]]; then 
 			export WASM_NODE=https://rpc.mainnet.archway.io:443
 			export WASM_CHAIN_ID=archway-1
@@ -82,6 +83,7 @@ case $COSMOS in
 			export WASM_GAS=900000000000
 			export WASM_NETWORK_ID=archway
 			export WASM_PREFIX=archway
+			export WASM_BIN=archwayd
 		else
 			echo "Invalid cosmos chain selected. Ensure COSMOS_NET = local or testnet or mainnet "
 			exit 0
@@ -95,13 +97,23 @@ case $COSMOS in
 			export WASM_GAS=0.025
 			export WASM_NETWORK_ID=neutron
 			export WASM_PREFIX=neutron
+			export WASM_BIN=neutrond
 		elif [[ $COSMOS_NET == "testnet" ]]; then 
-			export WASM_NODE=https://rpc.constantine.archway.tech:443
+			export WASM_NODE=https://rpc-falcron.pion-1.ntrn.tech:443
 			export WASM_CHAIN_ID=pion-1
 			export WASM_TOKEN=untrn
-			export WASM_GAS=900000000000
+			export WASM_GAS=1
 			export WASM_NETWORK_ID=neutron
 			export WASM_PREFIX=neutron
+			export WASM_BIN=neutrond
+		elif [[ $COSMOS_NET == "mainnet" ]]; then 
+			export WASM_NODE=https://rpc-kralum.neutron-1.neutron.org
+			export WASM_CHAIN_ID=neutron-1
+			export WASM_TOKEN=untrn
+			export WASM_GAS=0.5
+			export WASM_NETWORK_ID=neutron
+			export WASM_PREFIX=neutron
+			export WASM_BIN=neutrond
 		else
 			echo "Invalid cosmos chain selected. Ensure COSMOS_NET = local or testnet "
 			exit 0
