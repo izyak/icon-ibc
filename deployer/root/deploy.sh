@@ -20,6 +20,8 @@ show_help() {
     echo "  config                                  Create Relay config file"
     echo "  icon-set-admin                          Set Admin for ICON"
     echo "  wasm-set-admin                          Set Admin for WASM"
+    echo "  icon-set-fee-handler                    Set xcall fee handler for ICON"
+    echo "  wasm-set-fee-handler                    Set xcall fee handler for WASM"
     echo "  migrate                                 Migrate Contracts"
     echo "Flags:"
     echo "  -h, --help                help for make"
@@ -73,10 +75,16 @@ case "$option" in
     ./wasm.sh -c $arg1 $arg2
     ;;
   "icon-set-admin")
-	  ./icon.sh -a $arg1
+    ./icon.sh -a $arg1
     ;;
   "wasm-set-admin")
-	  ./wasm.sh -a $arg1
+    ./wasm.sh -a $arg1
+    ;;
+  "icon-set-fee-handler")
+    ./icon.sh --set-protocol-fee-handler $arg1
+    ;;
+  "wasm-set-fee-handler")
+    ./wasm.sh --set-protocol-fee-handler $arg1
     ;;
   "icon-default-connection")
     ./icon.sh -d

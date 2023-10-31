@@ -179,6 +179,18 @@ function set_protocol_fee() {
 
 }
 
+function set_protocol_fee_handler() {
+	log_stack
+	local fee_handler_address=$1
+
+    local xcall=$(cat $CONTRACT_ADDR_WASM_XCALL)
+    local set_protocol_fee_handle="set_protocol_fee_handler"
+    local set_protocol_fee_handle_args="{\"$set_protocol_fee_handle\":{\"address\":\"$fee_handler_address\"}}"
+    if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$set_protocol_fee_handle" ]; then
+        execute_contract $xcall $set_protocol_fee_handle $set_protocol_fee_handle_args "$WASM_XCALL_COMMON_ARGS"
+    fi
+}
+
 function set_fee() {
     log_stack
 
@@ -218,12 +230,12 @@ function generate_wasm_wallets() {
 }
 
 
-SHORT=sicdwfpa
-LONG=setup,configure-ibc,configure-connection,default-connection,wallets,set-fee,set-protocol-fee,set-admin
+SHORT=sicdwfpha
+LONG=setup,configure-ibc,configure-connection,default-connection,wallets,set-fee,set-protocol-fee,set-protocol-fee-handler,set-admin
 
 options=$(getopt -o $SHORT --long $LONG -n 'wasm.sh' -- "$@")
 if [ $? -ne 0 ]; then
-    echo "Usage: $0 [-s] [-i] [-c] [-d] [-w] [-f] [-p] [-a]" >&2
+    echo "Usage: $0 [-s] [-i] [-c] [-d] [-w] [-f] [-p] [-h] [-a]" >&2
     exit 1
 fi
 
@@ -238,6 +250,7 @@ while true; do
         -w|--wallets) generate_wasm_wallets; shift ;;
         -f|--set-fee) set_fee; shift ;;
         -p|--set-protocol-fee) set_protocol_fee; shift ;;
+        -h|--set-protocol-fee-handler) set_protocol_fee_handler $3; shift ;;
         -a|--set-admin) set_admin $3; shift ;;
         --) shift; break ;;
         *) echo "Internal error!"; exit 1 ;;

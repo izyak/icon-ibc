@@ -194,6 +194,17 @@ function set_protocol_fee() {
     fi
 }
 
+function set_protocol_fee_handler() {
+    log_stack
+    local protocolFeeHandler=$1
+    local xcall=$(cat $CONTRACT_ADDR_JAVA_XCALL)
+    require_icon_contract_addr $xcall
+    local setProtocolFeeHandle="setProtocolFeeHandler"
+    if [ ! -f $LOGS/"$ICON_CHAIN_ID"_"$setProtocolFeeHandle" ]; then
+        icon_send_tx $xcall $setProtocolFeeHandle "$ICON_XCALL_COMMON_ARGS" _address=${protocolFeeHandler}
+    fi
+}
+
 function set_fee() {
     log_stack
 
@@ -236,12 +247,12 @@ function generate_icon_wallets() {
     /opt/ibc/bin/goloop ks gen -o $ICON_XCALL_WALLET -p $password
 }
 
-SHORT=sicdwfpa
-LONG=setup,configure-ibc,configure-connection,default-connection,wallets,set-fee,set-protocol-fee,set-admin
+SHORT=sicdwfpha
+LONG=setup,configure-ibc,configure-connection,default-connection,wallets,set-fee,set-protocol-fee,set-protocol-fee-handler,set-admin
 
 options=$(getopt -o $SHORT --long $LONG -n 'icon.sh' -- "$@")
 if [ $? -ne 0 ]; then
-    echo "Usage: $0 [-s] [-i] [-c] [-d] [-w] [-f] [-p] [-a]" >&2
+    echo "Usage: $0 [-s] [-i] [-c] [-d] [-w] [-f] [-p] [-h] [-a]" >&2
     exit 1
 fi
 
@@ -256,6 +267,7 @@ while true; do
         -w|--wallets) generate_icon_wallets; shift ;;
         -f|--set-fee) set_fee; shift ;;
         -p|--set-protocol-fee) set_protocol_fee; shift ;;
+        -h|--set-protocol-fee-handler) set_protocol_fee_handler $3; shift ;;
         -a|--set-admin) set_admin $3; shift ;;
         --) shift; break ;;
         *) echo "Internal error!"; exit 1 ;;
