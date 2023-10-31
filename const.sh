@@ -107,7 +107,7 @@ case $COSMOS in
 			export WASM_PREFIX=neutron
 			export WASM_BIN=neutrond
 		elif [[ $COSMOS_NET == "mainnet" ]]; then 
-			export WASM_NODE=https://rpc-kralum.neutron-1.neutron.org
+			export WASM_NODE=https://rpc-kralum.neutron-1.neutron.org:443
 			export WASM_CHAIN_ID=neutron-1
 			export WASM_TOKEN=untrn
 			export WASM_GAS=0.5
