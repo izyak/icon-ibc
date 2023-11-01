@@ -65,6 +65,20 @@ function execute_contract() {
 	check_txn_result $tx_hash $method
 }
 
+function set_rewards() {
+	log_stack
+	local contract_name=$1
+	local contract_addr=$2
+	local reward_addr=$3
+	local common_args=$4
+	log "set reward address for ${contract_name} to ${reward_addr}"
+
+	local tx_hash=$(${WASM_BIN} tx rewards set-contract-metadata ${contract_addr} \ 
+		--rewards-address ${reward_addr} $common_args -y --output json | jq -r .txhash )
+	log "tx_hash : ${tx_hash}"
+	check_txn_result $tx_hash "${contract_name}_rewards"
+}
+
 function setup_base_contracts() {
 	log_stack
 
@@ -176,7 +190,6 @@ function set_protocol_fee() {
     if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$set_protocol_fee" ]; then
         execute_contract $xcall $set_protocol_fee $set_protocol_fee_args "$WASM_XCALL_COMMON_ARGS"
     fi
-
 }
 
 function set_protocol_fee_handler() {
@@ -229,9 +242,46 @@ function generate_wasm_wallets() {
 
 }
 
+function set_rewards_addr() {
+	local reward_addr=$1
+	local ibc_core=$(cat $CONTRACT_ADDR_WASM_IBC_CORE)
+	local light_client=$(cat $CONTRACT_ADDR_WASM_LIGHT_CLIENT)
+	local xcall=$(cat $CONTRACT_ADDR_WASM_XCALL)
+    local xcall_connection=$(cat $CONTRACT_ADDR_WASM_XCALL_CONNECTION)
 
-SHORT=sicdwfpha
-LONG=setup,configure-ibc,configure-connection,default-connection,wallets,set-fee,set-protocol-fee,set-protocol-fee-handler,set-admin
+    if [ $COSMOS != "archway" ]; then
+    	log "rewards can be set for archway only..."
+    	exit
+    fi
+
+    local contract_name="ibc_core"
+    local identifier="${contract_name}_rewards"
+    if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$identifier" ]; then
+	    set_rewards ${contract_name} ${ibc_core} ${reward_addr} "$WASM_IBC_COMMON_ARGS"
+	fi
+
+	local contract_name="light_client"
+    local identifier="${contract_name}_rewards"
+    if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$identifier" ]; then
+	    set_rewards ${contract_name} ${light_client} ${reward_addr} "$WASM_IBC_COMMON_ARGS"
+	fi
+
+	local contract_name="xcall_connection"
+    local identifier="${contract_name}_rewards"
+    if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$identifier" ]; then
+	    set_rewards ${contract_name} ${xcall_connection} ${reward_addr} "$WASM_XCALL_COMMON_ARGS"
+	fi
+
+	local contract_name="xcall_multi"
+    local identifier="${contract_name}_rewards"
+    if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$identifier" ]; then
+	    set_rewards ${contract_name} ${xcall} ${reward_addr} "$WASM_XCALL_COMMON_ARGS"
+	fi
+}
+
+
+SHORT=sicdwfphar
+LONG=setup,configure-ibc,configure-connection,default-connection,wallets,set-fee,set-rewards-archway,set-protocol-fee,set-protocol-fee-handler,set-admin
 
 options=$(getopt -o $SHORT --long $LONG -n 'wasm.sh' -- "$@")
 if [ $? -ne 0 ]; then
@@ -249,6 +299,7 @@ while true; do
         -d|--default-connection) set_default_connection; shift ;;
         -w|--wallets) generate_wasm_wallets; shift ;;
         -f|--set-fee) set_fee; shift ;;
+        -r|--set-rewards) set_rewards_addr $3; shift ;;
         -p|--set-protocol-fee) set_protocol_fee; shift ;;
         -h|--set-protocol-fee-handler) set_protocol_fee_handler $3; shift ;;
         -a|--set-admin) set_admin $3; shift ;;

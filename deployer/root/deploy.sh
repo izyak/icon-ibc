@@ -22,6 +22,7 @@ show_help() {
     echo "  wasm-set-admin                          Set Admin for WASM"
     echo "  icon-set-fee-handler                    Set xcall fee handler for ICON"
     echo "  wasm-set-fee-handler                    Set xcall fee handler for WASM"
+    echo "  wasm-set-rewards                        Set reward address for Archway. Same reward addr for all."
     echo "  migrate                                 Migrate Contracts"
     echo "Flags:"
     echo "  -h, --help                help for make"
