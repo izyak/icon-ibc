@@ -81,6 +81,9 @@ case "$option" in
   "wasm-set-admin")
     ./wasm.sh -a $arg1
     ;;
+  "wasm-set-rewards")
+    ./wasm.sh --set-rewards $arg1
+    ;;
   "icon-set-fee-handler")
     ./icon.sh --set-protocol-fee-handler $arg1
     ;;
