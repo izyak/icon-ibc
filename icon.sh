@@ -61,6 +61,64 @@ function deploy_contract() {
     save_address "$tx_hash" $addrLoc
 }
 
+function update_contract() {
+    log_stack
+    local contract=$3
+    local jarFile=$4
+    requireFile $jarFile "$jarFile does not exist"
+    local addrLoc
+    local commonArgs
+
+    case "$contract" in
+        "ibc-core")
+            addrLoc=${CONTRACT_ADDR_JAVA_IBC_CORE}
+            commonArgs=${ICON_IBC_COMMON_ARGS}
+            ;;
+        "light-client")
+            addrLoc=${CONTRACT_ADDR_JAVA_LIGHT_CLIENT}
+            commonArgs=${ICON_IBC_COMMON_ARGS}
+            ;;
+        "xcall")
+            addrLoc=${CONTRACT_ADDR_JAVA_XCALL}
+            commonArgs=${ICON_XCALL_COMMON_ARGS}
+            ;;
+        "xcall-connection")
+            addrLoc=${CONTRACT_ADDR_JAVA_XCALL_CONNECTION}
+            commonArgs=${ICON_XCALL_COMMON_ARGS}
+            ;;
+        *)
+            echo "Please provide one of the following flags: "
+            echo "./icon.sh --update ibc-core          <path-to-jar-file>                  Update IBC Contract "
+            echo "./icon.sh --update light-client      <path-to-jar-file>                  Update Light Client Contract "
+            echo "./icon.sh --update xcall             <path-to-jar-file>                  Update  Xcall Contract "
+            echo "./icon.sh --update xcall-connection  <path-to-jar-file>                  Update Xcall-Connection Contract "
+            exit
+            ;;
+    esac
+
+    log "updating contract ${jarFile##*/}"
+
+    local contract_address=$(cat $addrLoc)
+
+    local walletName=$(echo $commonArgs | grep -oP -- '-key_store \K[^ ]*')
+    echo -n "Enter keystore password for $walletName: "
+    read -s password
+
+
+    local params=()
+    for i in "${@:5}"; do params+=("--param $i"); done
+
+    local tx_hash=$(
+        goloop rpc sendtx deploy $jarFile \
+            --content_type application/java \
+            --to $contract_address \
+            $commonArgs \
+            --key_password $password \
+            ${params[@]} | jq -r .
+    )
+    icon_wait_tx "$tx_hash"
+}
+
 function icon_send_tx() {
     log_stack
 
@@ -210,8 +268,8 @@ function generate_icon_wallets() {
     goloop ks gen -o $ICON_XCALL_WALLET -p $password
 }
 
-SHORT=sicdwfp
-LONG=setup,configure-ibc,configure-connection,default-connection,wallets,set-fee,set-protocol-fee
+SHORT=sicdwfpu
+LONG=setup,configure-ibc,configure-connection,default-connection,wallets,set-fee,set-protocol-fee,update
 
 options=$(getopt -o $SHORT --long $LONG -n 'icon.sh' -- "$@")
 if [ $? -ne 0 ]; then
@@ -229,6 +287,7 @@ while true; do
         -d|--default-connection) set_default_connection; shift ;;
         -w|--wallets) generate_icon_wallets; shift ;;
         -f|--set-fee) set_fee; shift ;;
+        -u|--update) update_contract $@; shift ;;
         -p|--set-protocol-fee) set_protocol_fee; shift ;;
         --) shift; break ;;
         *) echo "Internal error!"; exit 1 ;;
