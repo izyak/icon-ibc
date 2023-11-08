@@ -279,6 +279,72 @@ function set_rewards_addr() {
 	fi
 }
 
+function migrate_contract() {
+    log_stack
+    local contract_name=$1
+    local wasm_file=$2
+    local migrate_arg=$3
+
+    local addr_loc
+    local wasm_common_args
+    requireFile $wasm_file "$wasm_file does not exist"
+
+    case "$contract_name" in
+        "ibc-core")
+            addr_loc=${CONTRACT_ADDR_WASM_IBC_CORE}
+            wasm_common_args=${WASM_IBC_COMMON_ARGS}
+            ;;
+        "light-client")
+            addr_loc=${CONTRACT_ADDR_WASM_LIGHT_CLIENT}
+            wasm_common_args=${WASM_IBC_COMMON_ARGS}
+            ;;
+        "xcall")
+            addr_loc=${CONTRACT_ADDR_WASM_XCALL}
+            wasm_common_args=${WASM_XCALL_COMMON_ARGS}
+            ;;
+        "xcall-connection")
+            addr_loc=${CONTRACT_ADDR_WASM_XCALL_CONNECTION}
+            wasm_common_args=${WASM_XCALL_COMMON_ARGS}
+            ;;
+        *)
+            echo "Please provide one of the following flags: "
+            echo "ibc-core           <path-to-wasm> <params>      Update IBC Contract "
+            echo "light-client       <path-to-wasm> <params>      Update Light Client Contract "
+            echo "xcall              <path-to-wasm> <params>      Update Xcall Contract "
+            echo "xcall-connection   <path-to-wasm> <params>      Update Xcall Connection Contract "
+            exit
+            ;;
+    esac
+
+    local contract_address=$(cat $addr_loc)
+    log "migrating ${wasm_file##*/} to $contract_addr with args $migrate_arg"
+
+    read -p "Confirm? y/N " confirm
+
+    if [[ $confirm == "y" ]]; then 
+        local res=$(${WASM_BIN} tx wasm store $wasm_file $wasm_common_args -y --output json -b block)
+        echo $res
+        local code_id=$(echo $res | jq -r '.logs[0].events[] | select(.type=="store_code") | .attributes[] | select(.key=="code_id") | .value')
+        log "received code id ${code_id}"
+
+        local res=$(${WASM_BIN} tx wasm migrate $contract_addr $code_id $migrate_arg $wasm_common_args -y)
+
+        while :; do
+    		local addr=$(${WASM_BIN} query wasm lca "${code_id}" --node $WASM_NODE --output json | jq -r '.contracts[-1]') 
+    		if [ "$addr" != "null" ]; then
+    	        break
+    	    fi
+    	    sleep 2
+    	done
+
+    	local contract=$(${WASM_BIN} query wasm lca "${code_id}" --node $WASM_NODE --output json | jq -r '.contracts[-1]')
+    	log "${wasm_file##*/} updated on ${COSMOS} at address : ${contract}"
+    else
+        log "Exiting"
+        exit
+    fi
+}
+
 
 SHORT=sicdwfphar
 LONG=setup,configure-ibc,configure-connection,default-connection,wallets,set-fee,set-rewards-archway,set-protocol-fee,set-protocol-fee-handler,set-admin

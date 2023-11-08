@@ -238,6 +238,67 @@ function set_admin() {
     fi
 }
 
+function update_contract() {
+    log_stack
+    local contract_name=$1
+    local contract_jarfile=$2
+
+    requireFile $jarFile "$jarFile does not exist"
+    local addrLoc
+    local common_args
+
+    case "$contract_name" in
+        "ibc-core")
+            addrLoc=${CONTRACT_ADDR_JAVA_IBC_CORE}
+            common_args=${ICON_IBC_COMMON_ARGS}
+            ;;
+        "light-client")
+            addrLoc=${CONTRACT_ADDR_JAVA_LIGHT_CLIENT}
+            common_args=${ICON_IBC_COMMON_ARGS}
+            ;;
+        "xcall")
+            addrLoc=${CONTRACT_ADDR_JAVA_XCALL}
+            common_args=${ICON_XCALL_COMMON_ARGS}
+            ;;
+        "xcall-connection")
+            addrLoc=${CONTRACT_ADDR_JAVA_XCALL_CONNECTION}
+            common_args=${ICON_XCALL_COMMON_ARGS}
+            ;;
+        *)
+            echo "Please provide one of the following flags: "
+            echo "ibc-core           <path-to-jarFile>  <params>    Update IBC Contract "
+            echo "light-client       <path-to-jarFile>  <params>    Update Light Client Contract "
+            echo "xcall              <path-to-jarFile>  <params>    Update Xcall Contract "
+            echo "xcall-connection   <path-to-jarFile>  <params>    Update Xcall Connection Contract "
+            exit
+            ;;
+    esac
+
+
+    local contract_address=$(cat $addrLoc)
+    local params=()
+    for i in "${@:3}"; do params+=("--param $i"); done
+
+    log "updating contract ${contract_jarfile##*/} with params ${params}"
+
+    read -p "Confirm? y/N " confirm
+
+    if [[ $confirm == "y" ]]; then 
+        local tx_hash=$(
+            goloop rpc sendtx deploy $contract_jarfile \
+                --content_type application/java \
+                --to $contract_address \
+                $common_args \
+                ${params[@]} | jq -r .
+        )
+        icon_wait_tx "$tx_hash"
+        log "$contract_name updated! "
+    else
+        log "Exiting"
+        exit
+    fi
+}
+
 function generate_icon_wallets() {
     local password=$(generatePassword)
     echo $password > $ICON_IBC_PASSWORD_FILE
