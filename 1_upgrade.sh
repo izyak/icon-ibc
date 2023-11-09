@@ -18,8 +18,8 @@ WASM_XCALL=$WORK_DIR/artifacts/cw_xcall_0.2.0.wasm
 cd $WORK_DIR
 
 # Fetch contracts to update
-curl -L https://github.com/icon-project/xcall-multi/releases/download/v1.1.0-rc4/cw_xcall_0.2.0.wasm --output $WASM_XCALL
-curl -L https://github.com/icon-project/xcall-multi/releases/download/v1.1.0-rc4/xcall-0.1.1-optimized.jar --output $ICON_XCALL
+curl -L https://github.com/icon-project/xcall-multi/releases/download/v1.1.0-rc5/cw_xcall_0.2.0.wasm--output $WASM_XCALL
+curl -L https://github.com/icon-project/xcall-multi/releases/download/v1.1.0-rc5/xcall-0.2.0-optimized.jar --output $ICON_XCALL
 echo
 echo
 
