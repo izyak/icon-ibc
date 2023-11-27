@@ -112,7 +112,7 @@ function migrate_contract() {
         local code_id=$(echo $res | jq -r '.logs[0].events[] | select(.type=="store_code") | .attributes[] | select(.key=="code_id") | .value')
         log "received code id ${code_id}"
 
-        local res=$(${WASM_BIN} tx wasm migrate $contract_address $code_id $migrate_arg $wasm_common_args -y)
+        local res=$(${WASM_BIN} tx wasm migrate $contract_address $code_id "$migrate_arg" $wasm_common_args -y)
 
         while :; do
     		local addr=$(${WASM_BIN} query wasm lca "${code_id}" --node $WASM_NODE --output json | jq -r '.contracts[-1]') 
