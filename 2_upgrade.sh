@@ -16,7 +16,7 @@ WASM_XCALL_CONNECTION=$WORK_DIR/artifacts/cw_xcall_connection_0.1.1.wasm
 cd $WORK_DIR
 
 # Fetch contracts to update
-curl -L https://github.com/icon-project/IBC-Integration/releases/download/v1.0.0/cw_ibc_core_0.1.0.wasm --output $WASM_IBC
+curl -L https://github.com/icon-project/IBC-Integration/releases/download/v1.1.0-rc1/cw_ibc_core_0.1.0.wasm --output $WASM_IBC
 curl -L https://github.com/icon-project/IBC-Integration/releases/download/v1.1.0-rc1/cw_xcall_ibc_connection_0.1.1.wasm --output $WASM_XCALL_CONNECTION
 
 # update ibc-contract on archway
