@@ -81,7 +81,7 @@ case $COSMOS in
 			export WASM_CHAIN_ID=archway-1
 			export WASM_TOKEN=aarch
 			export WASM_GAS=900000000000
-			export WASM_NETWORK_ID=archway
+			export WASM_NETWORK_ID=archway-1
 			export WASM_PREFIX=archway
 			export WASM_BIN=archwayd
 		else
@@ -111,7 +111,7 @@ case $COSMOS in
 			export WASM_CHAIN_ID=neutron-1
 			export WASM_TOKEN=untrn
 			export WASM_GAS=0.5
-			export WASM_NETWORK_ID=neutron
+			export WASM_NETWORK_ID=neutron-1
 			export WASM_PREFIX=neutron
 			export WASM_BIN=neutrond
 		else

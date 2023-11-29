@@ -23,7 +23,7 @@ show_help() {
     echo "  icon-set-fee-handler                    Set xcall fee handler for ICON"
     echo "  wasm-set-fee-handler                    Set xcall fee handler for WASM"
     echo "  wasm-set-rewards                        Set reward address for Archway. Same reward addr for all."
-    echo "  migrate                                 Migrate Contracts"
+    echo "  upgrade1                                Run the first upgrade"
     echo "Flags:"
     echo "  -h, --help                help for make"
 }
@@ -98,6 +98,9 @@ case "$option" in
     ;;
   "migrate")
     ./migrate.sh migrate $arg1 $arg2 $arg3
+    ;;
+  "upgrade1")
+    ./1_upgrade.sh
     ;;
   "config")
     ./cfg.sh
