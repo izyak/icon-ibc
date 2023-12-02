@@ -28,7 +28,7 @@ curl -L https://github.com/icon-project/IBC-Integration/releases/download/v1.1.0
 curl -L https://github.com/icon-project/xcall-multi/releases/download/v1.1.0-hotfix/cw_xcall_latest.wasm --output $WASM_XCALL
 
 curl -L https://github.com/icon-project/IBC-Integration/releases/download/v1.1.0-hotfix/xcall-connection-0.1.0-optimized.jar --output $ICON_XCALL_CONNECTION
-curl -L https://github.com/icon-project/xcall-multi/releases/download/v1.1.0-hotfix/xcall-0.2.0-optimized.jar--output $ICON_XCALL
+curl -L https://github.com/icon-project/xcall-multi/releases/download/v1.1.0-hotfix/xcall-0.2.0-optimized.jar --output $ICON_XCALL
 
 echo
 echo
@@ -48,7 +48,7 @@ fi
 
 # update xcall on archway
 if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"1_xcall_upgrade" ]; then
-	migrate_contract xcall $WASM_XCALL '{"network_id": "archway-1"}'
+	migrate_contract xcall $WASM_XCALL '{"network_id":"archway-1"}'
 	echo 1 > $LOGS/"$WASM_CHAIN_ID"_"1_xcall_upgrade"
 fi
 

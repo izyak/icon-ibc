@@ -316,8 +316,8 @@ function migrate_contract() {
             ;;
     esac
 
-    local contract_address=$(cat $addr_loc)
-    log "migrating ${wasm_file##*/} to $contract_addr with args $migrate_arg"
+    local contract_addr=$(cat $addr_loc)
+    log "migrating ${wasm_file##*/} to $WASM_NETWORK_ID with args $migrate_arg"
 
     read -p "Confirm? y/N " confirm
 
@@ -327,7 +327,7 @@ function migrate_contract() {
         local code_id=$(echo $res | jq -r '.logs[0].events[] | select(.type=="store_code") | .attributes[] | select(.key=="code_id") | .value')
         log "received code id ${code_id}"
 
-        local res=$(${WASM_BIN} tx wasm migrate $contract_addr $code_id $migrate_arg $wasm_common_args -y)
+        local res=$(${WASM_BIN} tx wasm migrate $contract_addr $code_id "$migrate_arg" $wasm_common_args -y)
 
         while :; do
     		local addr=$(${WASM_BIN} query wasm lca "${code_id}" --node $WASM_NODE --output json | jq -r '.contracts[-1]') 
