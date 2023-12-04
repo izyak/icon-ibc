@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export COSMOS=archway 		## [ neutron, archway ]
+export COSMOS=archway 		## [ neutron, archway, injective ]
 export COSMOS_NET=testnet 	## [ local, testnet ]
 export ICON=icon
 export ICON_NET=lisbon 		## [ goloop, berlin, lisbon]
@@ -96,6 +96,30 @@ case $COSMOS in
 			export WASM_NETWORK_ID=neutron
 			export WASM_PREFIX=neutron
 			export WASM_BIN=neutrond
+		else
+			echo "Invalid cosmos chain selected. Ensure COSMOS_NET = local or testnet "
+			exit 0
+		fi
+	;;
+	"injective" )
+		if [[ $COSMOS_NET == "local" ]]; then
+			export WASM_NODE=http://localhost:26657
+			export WASM_CHAIN_ID=test-1
+			export WASM_TOKEN=inj
+			export WASM_GAS=0.025
+			export WASM_NETWORK_ID=injective
+			export WASM_PREFIX=inj
+			export WASM_BIN=injectived
+			export COSMOS_CONTRACT_ADDR_LEN=42
+		elif [[ $COSMOS_NET == "testnet" ]]; then
+			export WASM_NODE=https://k8s.testnet.tm.injective.network:443
+			export WASM_CHAIN_ID=injective-888
+			export WASM_TOKEN=inj
+			export WASM_GAS=500000000
+			export WASM_NETWORK_ID=injective
+			export WASM_PREFIX=inj
+			export WASM_BIN=injectived
+			export COSMOS_CONTRACT_ADDR_LEN=42
 		else
 			echo "Invalid cosmos chain selected. Ensure COSMOS_NET = local or testnet "
 			exit 0

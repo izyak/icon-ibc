@@ -11,10 +11,15 @@ function deploy_contract() {
 	local common_args=$4
 	local admin_wallet=$5
 	requireFile ${wasm_file} "${wasm_file} does not exist"
-	log "deploying contract ${wasm_file##*/}"
+	log "deploying contract ${wasm_file##*/} with params ${init_args}"
 
-	local res=$(${WASM_BIN} tx wasm store $wasm_file $common_args   -y --output json -b block)
-	local code_id=$(echo $res | jq -r '.logs[0].events[] | select(.type=="store_code") | .attributes[] | select(.key=="code_id") | .value')
+	local res=$(${WASM_BIN} tx wasm store $wasm_file $common_args   -y --output json)
+	local tx_hash=$(echo $res | jq -r .txhash)
+	log "tx_hash: ${tx_hash}"
+	while :; do
+		(${WASM_BIN} query tx ${tx_hash} --node $WASM_NODE --chain-id $WASM_CHAIN_ID --output json &>/dev/null) && break || sleep 2
+	done
+	local code_id=$(${WASM_BIN} query tx ${tx_hash} --node $WASM_NODE --chain-id $WASM_CHAIN_ID --output json | jq -r '.logs[0].events[1].attributes[] | select(.key=="code_id") | .value' | jq -r .)
 	log "received code id ${code_id}"
 
 	local admin=$(${WASM_BIN} keys show $admin_wallet $WASM_EXTRA --output=json | jq -r .address)
@@ -107,10 +112,14 @@ function migrate_contract() {
     read -p "Confirm? y/N " confirm
 
     if [[ $confirm == "y" ]]; then 
-        local res=$(${WASM_BIN} tx wasm store $wasm_file $wasm_common_args -y --output json -b block)
-        echo $res
-        local code_id=$(echo $res | jq -r '.logs[0].events[] | select(.type=="store_code") | .attributes[] | select(.key=="code_id") | .value')
-        log "received code id ${code_id}"
+    	local res=$(${WASM_BIN} tx wasm store $wasm_file $wasm_common_args   -y --output json)
+		local tx_hash=$(echo $res | jq -r .txhash)
+		log "tx_hash: ${tx_hash}"
+		while :; do
+			(${WASM_BIN} query tx ${tx_hash} --node $WASM_NODE --chain-id $WASM_CHAIN_ID --output json &>/dev/null) && break || sleep 2
+		done
+		local code_id=$(${WASM_BIN} query tx ${tx_hash} --node $WASM_NODE --chain-id $WASM_CHAIN_ID --output json | jq -r '.logs[0].events[1].attributes[] | select(.key=="code_id") | .value' | jq -r .)
+		log "received code id ${code_id}"
 
         local res=$(${WASM_BIN} tx wasm migrate $contract_address $code_id "$migrate_arg" $wasm_common_args -y)
 
