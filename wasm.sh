@@ -11,6 +11,7 @@ function deploy_contract() {
 	local common_args=$4
 	local admin_wallet=$5
 	local code_id=$6
+	# Do not run tx wasm store for the contract that need governance proposal . e.g. Injective
 	if [[ "$TX_STORE_WASM" == "yes" ]];then
 		requireFile ${wasm_file} "${wasm_file} does not exist"
 		log "deploying contract ${wasm_file##*/}"
