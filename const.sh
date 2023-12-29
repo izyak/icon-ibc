@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export COSMOS=archway 		## [ neutron, archway, injective ]
-export COSMOS_NET=testnet 	## [ local, testnet ]
+export COSMOS=injective 		## [ neutron, archway, injective ]
+export COSMOS_NET=mainnet 	## [ local, testnet, mainnet ]
 export ICON=icon
 export ICON_NET=lisbon 		## [ goloop, berlin, lisbon]
 
@@ -51,7 +51,17 @@ export WASM_XCALL_TIMEOUT_HEIGHT=1207360 # timeout height to be set on wasm
 
 
 export RELAY_CFG=$HOME/.relayer/config/config.yaml
-export RELAY_PATH_NAME=icon-archway
+export RELAY_PATH_NAME=icon-injective
+
+export TX_STORE_WASM="no" # Set to "no" if the wasm should be uploaded through governance proposal (injective mainnet)
+## Injective Mainnet Contract Code IDs
+declare -A INJ_CODE_ID
+INJ_CODE_ID=(
+	[cw_ibc_core]="310" 
+	[cw_icon_light_client]="311" 
+	[cw_xcall]="312" 
+	[cw_xcall_ibc_connection]="313"
+	)
 
 #################################################################################
 ##############################    NETWORKS    ###################################
@@ -114,6 +124,15 @@ case $COSMOS in
 		elif [[ $COSMOS_NET == "testnet" ]]; then
 			export WASM_NODE=https://k8s.testnet.tm.injective.network:443
 			export WASM_CHAIN_ID=injective-888
+			export WASM_TOKEN=inj
+			export WASM_GAS=500000000
+			export WASM_NETWORK_ID=injective
+			export WASM_PREFIX=inj
+			export WASM_BIN=injectived
+			export COSMOS_CONTRACT_ADDR_LEN=42
+		elif [[ $COSMOS_NET == "mainnet" ]]; then
+			export WASM_NODE=https://sentry.tm.injective.network:443
+			export WASM_CHAIN_ID=injective-1
 			export WASM_TOKEN=inj
 			export WASM_GAS=500000000
 			export WASM_NETWORK_ID=injective
