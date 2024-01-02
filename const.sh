@@ -124,6 +124,7 @@ case $COSMOS in
 			export WASM_NETWORK_ID=neutron-1
 			export WASM_PREFIX=neutron
 			export WASM_BIN=neutrond
+		fi
 	"injective" )
 		if [[ $COSMOS_NET == "local" ]]; then
 			export WASM_NODE=http://localhost:26657
