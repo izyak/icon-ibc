@@ -232,7 +232,7 @@ def load_archway_wallet(directory):
                 # Define the command to execute
                 command = f'echo "{password}" | archwayd keys import {wallet_name} {directory}/{key_file} --keyring-backend test'
                 command_inj = f'echo "{password}" | injectived keys import {wallet_name} {directory}/{key_file} --keyring-backend test'
-                command_ntrn = f'echo "{password}" | injectived keys import {wallet_name} {directory}/{key_file} --keyring-backend test'
+                command_ntrn = f'echo "{password}" | neutrond keys import {wallet_name} {directory}/{key_file} --keyring-backend test'
 
                 # Execute the command using subprocess
                 subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
