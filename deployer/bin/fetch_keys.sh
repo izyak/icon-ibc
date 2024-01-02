@@ -15,5 +15,11 @@ echo "Checking Archway ibc wallet ..."
 archwayd keys list --keyring-backend test | grep -q ibc_wallet && echo SUCCESS || echo FAILED
 echo "Checking Archway xcall wallet ..."
 archwayd keys list --keyring-backend test | grep -q xcall_wallet && echo SUCCESS || echo FAILED
+echo "Checking Injective ibc wallet ..."
+injectived keys list --keyring-backend test | grep -q ibc_wallet && echo SUCCESS || echo FAILED
+echo "Checking Injective xcall wallet ..."
+injectived keys list --keyring-backend test | grep -q xcall_wallet && echo SUCCESS || echo FAILED
+## Check injectived keys id
+injectived keys list --keyring-backend test | grep -E 'address|name'
 # Remove permission for all the other users
 chmod 700 /opt/deployer/root/keystore/*
