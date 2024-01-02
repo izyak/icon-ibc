@@ -11,11 +11,12 @@ function deploy_contract() {
 	local common_args=$4
 	local admin_wallet=$5
 	local code_id=$6
+	local contract_name=$(echo ${wasm_file##*/} | sed 's/\.wasm//')
+
 	# Do not run tx wasm store for the contract that need governance proposal . e.g. Injective
 	if [[ "$TX_STORE_WASM" == "yes" ]];then
 		requireFile ${wasm_file} "${wasm_file} does not exist"
 		log "deploying contract ${wasm_file##*/}"
-		local contract_name=$(echo ${wasm_file##*/} | sed 's/\.wasm//')
 
 		local res=$(${WASM_BIN} tx wasm store $wasm_file $common_args   -y --output json -b block)
 		local code_id=$(echo $res | jq -r '.logs[0].events[] | select(.type=="store_code") | .attributes[] | select(.key=="code_id") | .value')
