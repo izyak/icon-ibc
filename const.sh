@@ -94,6 +94,8 @@ case $COSMOS in
 			export WASM_NETWORK_ID=archway-1
 			export WASM_PREFIX=archway
 			export WASM_BIN=archwayd
+			export WASM_XCALL_TIMEOUT_HEIGHT=1207360 # timeout height to be set on wasm 
+
 		else
 			echo "Invalid cosmos chain selected. Ensure COSMOS_NET = local or testnet or mainnet "
 			exit 0
@@ -124,6 +126,8 @@ case $COSMOS in
 			export WASM_NETWORK_ID=neutron-1
 			export WASM_PREFIX=neutron
 			export WASM_BIN=neutrond
+			export WASM_XCALL_TIMEOUT_HEIGHT=1207360 # timeout height to be set on wasm 
+
 		fi
 	;;
 	"injective" )
@@ -154,6 +158,8 @@ case $COSMOS in
 			export WASM_PREFIX=inj
 			export WASM_BIN=injectived
 			export COSMOS_CONTRACT_ADDR_LEN=42
+			export WASM_XCALL_TIMEOUT_HEIGHT=3024000 # timeout height to be set on wasm 
+
 		else
 			echo "Invalid cosmos chain selected. Ensure COSMOS_NET = local or testnet "
 			exit 0
