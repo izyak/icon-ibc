@@ -18,7 +18,7 @@ ICON_TM_CLIENT=$WORK_DIR/artifacts/tendermint_0.1.1.jar
 cd $WORK_DIR
 
 # Fetch contracts to update
-curl -L https://github.com/icon-project/IBC-Integration/releases/download/v1.1.2/tendermint-0.1.1-optimized.jar --output $ICON_TM_CLIENT
+curl -L https://github.com/icon-project/IBC-Integration/releases/download/v1.1.2/tendermint-0.1.2-optimized.jar --output $ICON_TM_CLIENT
 
 echo
 
