@@ -11,14 +11,14 @@ source const.sh
 echo "Fetching contracts"
 WORK_DIR=$PWD
 
-ICON_TM_CLIENT=$WORK_DIR/artifacts/tendermint_0.1.2.jar
+ICON_TM_CLIENT=$WORK_DIR/artifacts/xcall-connection-0.1.2-optimized.jar
 
 
 # Navigate to working directory
 cd $WORK_DIR
 
 # Fetch contracts to update
-curl -L https://github.com/icon-project/IBC-Integration/releases/download/v1.1.2/tendermint-0.1.2-optimized.jar --output $ICON_TM_CLIENT
+curl -L https://github.com/icon-project/IBC-Integration/releases/download/v1.1.2/xcall-connection-0.1.2-optimized.jar --output $ICON_TM_CLIENT
 
 echo
 
