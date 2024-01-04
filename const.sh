@@ -75,7 +75,7 @@ case $COSMOS in
 			export WASM_CHAIN_ID=localnet
 			export WASM_TOKEN=stake
 			export WASM_GAS=0.025
-			export WASM_NETWORK_ID=archway
+			export WASM_NETWORK_ID=archway-1
 			export WASM_PREFIX=archway
 			export WASM_BIN=archwayd
 		elif [[ $COSMOS_NET == "testnet" ]]; then 
@@ -83,7 +83,7 @@ case $COSMOS in
 			export WASM_CHAIN_ID=constantine-3
 			export WASM_TOKEN=aconst
 			export WASM_GAS=900000000000
-			export WASM_NETWORK_ID=archway
+			export WASM_NETWORK_ID=constantine-3
 			export WASM_PREFIX=archway
 			export WASM_BIN=archwayd
 		elif [[ $COSMOS_NET == "mainnet" ]]; then 
@@ -115,7 +115,7 @@ case $COSMOS in
 			export WASM_CHAIN_ID=pion-1
 			export WASM_TOKEN=untrn
 			export WASM_GAS=1
-			export WASM_NETWORK_ID=neutron
+			export WASM_NETWORK_ID=pion-1
 			export WASM_PREFIX=neutron
 			export WASM_BIN=neutrond
 		elif [[ $COSMOS_NET == "mainnet" ]]; then 
@@ -145,7 +145,7 @@ case $COSMOS in
 			export WASM_CHAIN_ID=injective-888
 			export WASM_TOKEN=inj
 			export WASM_GAS=500000000
-			export WASM_NETWORK_ID=injective
+			export WASM_NETWORK_ID=injective-888
 			export WASM_PREFIX=inj
 			export WASM_BIN=injectived
 			export COSMOS_CONTRACT_ADDR_LEN=42
@@ -154,7 +154,7 @@ case $COSMOS in
 			export WASM_CHAIN_ID=injective-1
 			export WASM_TOKEN=inj
 			export WASM_GAS=500000000
-			export WASM_NETWORK_ID=injective
+			export WASM_NETWORK_ID=injective-1
 			export WASM_PREFIX=inj
 			export WASM_BIN=injectived
 			export COSMOS_CONTRACT_ADDR_LEN=42
