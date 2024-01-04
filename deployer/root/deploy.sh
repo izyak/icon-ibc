@@ -99,7 +99,7 @@ case "$option" in
   "migrate")
     ./migrate.sh migrate $arg1 $arg2 $arg3
     ;;
-  "upgrade1")
+  "upgrade2")
     ./2_upgrade.sh
     ;;
   "config")
