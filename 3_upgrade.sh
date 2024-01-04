@@ -11,7 +11,7 @@ source const.sh
 echo "Fetching contracts"
 WORK_DIR=$PWD
 
-ICON_TM_CLIENT=$WORK_DIR/artifacts/tendermint_0.1.1.jar
+ICON_TM_CLIENT=$WORK_DIR/artifacts/tendermint_0.1.2.jar
 
 
 # Navigate to working directory
