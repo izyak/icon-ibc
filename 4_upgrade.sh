@@ -18,7 +18,9 @@ if [[ "$prev_xcall_addr" -ne "inj1sc8jqug4pz7uytlnya5s3zq22p93wth2glw8e4" ]]; th
 fi
 
 echo "Proceeding with instantiating new xcall..."
-rm $CONTRACT_ADDR_WASM_XCALL
+# rm $CONTRACT_ADDR_WASM_XCALL
+rm /opt/deployer/root/icon-ibc/ixc/injective-1_set_xcall_host_1
+rm /opt/deployer/root/icon-ibc/ixc/injective-1_set_default_connection
 
 # instantiate new xcall
 if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"xcall_instantiate_2" ]; then
@@ -33,7 +35,6 @@ if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"set_xcall_host_1" ]; then
 	set_xcall_host
 	echo 1 > $LOGS/"$WASM_CHAIN_ID"_"set_xcall_host_1"
 fi
-
 
 # delete prev log that prevents setting default connection
 rm $LOGS/"$WASM_CHAIN_ID"_"set_default_connection"
