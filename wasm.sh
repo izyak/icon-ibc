@@ -220,6 +220,18 @@ function set_fee() {
     fi
 }
 
+function set_xcall_host() {
+    log_stack
+
+    local xcall_connection=$(cat $CONTRACT_ADDR_WASM_XCALL_CONNECTION)
+    local xcall_addr=$(cat $CONTRACT_ADDR_WASM_XCALL)
+    local set_x_call_host="set_x_call_host"
+    local set_x_call_host_args="{\"$set_x_call_host\":{\"address\":\"${xcall_addr}\"}}"
+    if [ ! -f $LOGS/"$WASM_CHAIN_ID"_"$set_x_call_host" ]; then
+    	execute_contract $xcall_connection $set_x_call_host $set_x_call_host_args "$WASM_XCALL_COMMON_ARGS"
+    fi
+}
+
 function set_admin() {
 	log_stack
 	local xcall_admin=$1
