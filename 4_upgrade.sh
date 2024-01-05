@@ -19,8 +19,8 @@ fi
 
 echo "Proceeding with instantiating new xcall..."
 # rm $CONTRACT_ADDR_WASM_XCALL
-rm /opt/deployer/root/icon-ibc/ixc/injective-1_set_xcall_host_1
-rm /opt/deployer/root/icon-ibc/ixc/injective-1_set_xcall_host
+rm -rf /opt/deployer/root/icon-ibc/ixc/injective-1_set_x_call_host
+rm -rf /opt/deployer/root/icon-ibc/ixc/injective-1_set_xcall_host_1
 # rm /opt/deployer/root/icon-ibc/ixc/injective-1_set_default_connection
 
 # instantiate new xcall
